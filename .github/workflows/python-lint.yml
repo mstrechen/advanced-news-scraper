@@ -15,4 +15,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           failIf: any
-          args: "--ignore=E121,E123 ."
+          args: "--ignore=E121,E123 --max-line-length=120 ."
