@@ -1,5 +1,3 @@
-from flask import app
-
 from time import sleep
 
 from sqlalchemy.exc import OperationalError

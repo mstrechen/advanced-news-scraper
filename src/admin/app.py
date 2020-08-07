@@ -26,5 +26,5 @@ def get_locale():
     return session.get('lang', 'en')
 
 
-import admin.routes
+import admin.routes  # noqa: E402, F401
 init_app()

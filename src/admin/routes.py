@@ -1,6 +1,6 @@
 from admin.app import app, db
 from admin.models.user import User
-from flask import Markup, send_file
+from flask import send_file
 
 import flask_admin as admin
 

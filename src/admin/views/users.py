@@ -15,4 +15,3 @@ class UsersView(sqla.ModelView):
         'email',
     ]
     column_editable_list = ['full_name', ]
-
