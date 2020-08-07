@@ -13,6 +13,7 @@ babel = Babel()
 def init_app():
     db.init_app(app)
     babel.init_app(app)
+    app.logger.setLevel(app.config['LOGLEVEL'])
 
 
 @babel.localeselector
