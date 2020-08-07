@@ -1,0 +1,41 @@
+version: '2.0'
+services:
+  web:
+    build: ../src
+    ports:
+    - 80:80
+    env_file:
+      - dev.env
+    depends_on:
+      - mysql
+      - migrate
+    volumes:
+      - ../src/:/app/
+
+  migrate:
+    build: ../src
+    env_file:
+      - dev.env
+    depends_on:
+      - mysql
+    environment:
+      - MODE=migrate
+    volumes:
+      - ../src/:/app/
+
+
+  mysql:
+    image: mysql:5.7.31
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=tricky-root-password
+      - MYSQL_DATABASE=news_scraper
+      - MYSQL_USER=master
+      - MYSQL_PASSWORD=somepass
+    ports:
+      - 3306:3306
+volumes:
+  db-data:
