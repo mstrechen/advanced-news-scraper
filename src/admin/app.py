@@ -24,7 +24,7 @@ def init_app():
 def get_locale():
     override = request.args.get('lang')
 
-    if override:
+    if override and override in app.config['SUPPORTED_LANGUAGES']:
         session['lang'] = override
 
     return session.get('lang', 'en')
