@@ -12,7 +12,7 @@ from admin.views.users import UsersView
 def index():
     tmp = u"""
 <p><a href="/admin/?lang=en">Click me to get to Admin! (English)</a></p>
-<p><a href="/admin/?lang=en">Натисни, щоб увійти в Адмінку! (Українською)</a></p>
+<p><a href="/admin/?lang=uk">Натисни, щоб увійти в Адмінку! (Українською)</a></p>
 """
     return tmp
 
