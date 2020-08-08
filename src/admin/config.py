@@ -6,9 +6,10 @@ def parse_bool(s: str):
 
 
 FLASK_ADMIN_SWATCH = 'yeti'
+SUPPORTED_LANGUAGES = ['en', 'uk']
 
 # Create dummy secrey key so we can use sessions
-SECRET_KEY = '123456790'
+SECRET_KEY = os.environ.get('SECRET_KEY', '123456790')
 
 
 MYSQL_DATABASE_HOST = os.environ.get('MYSQL_HOST', 'mysql')
