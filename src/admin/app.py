@@ -20,7 +20,6 @@ def init_app():
     app.logger.setLevel(app.config['LOGLEVEL'])
 
 
-
 @babel.localeselector
 def get_locale():
     override = request.args.get('lang')
