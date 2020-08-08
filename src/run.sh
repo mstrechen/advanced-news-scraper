@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if [ "$MODE" == "WEB" ]; then
+if [ "$MODE" == "WEB_PRODUCTION" ]; then
+  pipenv run gunicorn -w 2 -b 0.0.0.0:80 run:app
+elif [ "$MODE" == "WEB" ]; then
     pipenv run python run.py
 elif [ "$MODE" == "MIGRATE" ]; then
   export FLASK_APP=admin/app
@@ -15,4 +17,6 @@ elif [ "$MODE" == "GENERATE_TRANSLATIONS" ]; then
 elif [ "$MODE" == "COMPILE_TRANSLATIONS" ]; then
   cd admin || exit
   pipenv run pybabel compile -d translations
+else
+  echo "Unknown MODE=$MODE" && exit 1
 fi
