@@ -1,5 +1,4 @@
 from flask_admin.contrib import sqla
-from flask_babelex import gettext
 
 
 class UsersView(sqla.ModelView):
@@ -16,5 +15,3 @@ class UsersView(sqla.ModelView):
         'email',
     ]
     column_editable_list = ['full_name', ]
-
-print(gettext("Back", ), flush=True)
