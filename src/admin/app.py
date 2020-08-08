@@ -1,4 +1,5 @@
 from flask import Flask, request, session
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 
@@ -8,11 +9,14 @@ app.config.from_pyfile('config.py')
 
 db = SQLAlchemy()
 babel = Babel()
+migrate = Migrate()
 
 
 def init_app():
     db.init_app(app)
-    babel.init_app(app)
+    babel.init_app(app, )
+    migrate.init_app(app, db)
+
     app.logger.setLevel(app.config['LOGLEVEL'])
 
 

@@ -4,9 +4,10 @@ WORKDIR /app
 
 RUN pip install pipenv
 COPY Pipfile Pipfile.lock ./
+
 RUN pipenv sync
 
-COPY ./admin ./admin
-COPY run.py ./
+COPY . .
+RUN chmod +x run.sh
 
-ENTRYPOINT pipenv run python run.py
+ENTRYPOINT ["/app/run.sh"]
