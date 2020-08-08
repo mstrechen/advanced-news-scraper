@@ -1,4 +1,4 @@
-version: '2.0'
+version: '2.1'
 services:
   web:
     build: ../src
@@ -9,6 +9,8 @@ services:
     depends_on:
       - mysql
       - migrate
+    environment:
+      - MODE=WEB
     volumes:
       - ../src/:/app/
 
@@ -17,12 +19,12 @@ services:
     env_file:
       - dev.env
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
-      - MODE=migrate
+      - MODE=MIGRATE
     volumes:
       - ../src/:/app/
-
 
   mysql:
     image: mysql:5.7.31
@@ -37,5 +39,8 @@ services:
       - MYSQL_PASSWORD=somepass
     ports:
       - 3306:3306
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD']
+
 volumes:
   db-data:
