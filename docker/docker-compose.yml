@@ -22,7 +22,8 @@ services:
       mysql:
         condition: service_healthy
     environment:
-      - MODE=MIGRATE
+      - MODE=${MODE:-MIGRATE}
+      - MIGRATION_MESSAGE
     volumes:
       - ../src/:/app/
 
