@@ -16,7 +16,7 @@ MYSQL_DATABASE_HOST = os.environ.get('MYSQL_HOST', 'mysql')
 MYSQL_DATABASE_PORT = os.environ.get('MYSQL_PORT', 3306)
 MYSQL_DATABASE_USER = os.environ.get('MYSQL_USER')
 MYSQL_DATABASE_PASSWORD = os.environ.get('MYSQL_PASSWORD')
-MYSQL_DATABASE_DB = os.environ.get('MYSQL_DB', 'news_scraper')
+MYSQL_DATABASE_DB = os.environ.get('MYSQL_DATABASE', 'news_scraper')
 
 
 SQLALCHEMY_DATABASE_URI = \
