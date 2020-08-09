@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$MODE" == "WEB_PRODUCTION" ]; then
-  pipenv run gunicorn -w 2 -b 0.0.0.0:80 run:app
+  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b 0.0.0.0:80 run:app
 elif [ "$MODE" == "WEB" ]; then
     pipenv run python run.py
 elif [ "$MODE" == "MIGRATE" ]; then
