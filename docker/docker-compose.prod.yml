@@ -11,7 +11,7 @@ services:
       - migrate
     environment:
       - MODE=WEB_PRODUCTION
-
+    mem_limit: 1gb
 
   migrate:
     build: ../src
@@ -22,6 +22,8 @@ services:
         condition: service_healthy
     environment:
       - MODE=MIGRATE
+    mem_limit: 300m
+
 
   mysql:
     image: mysql:5.7.31
@@ -35,6 +37,30 @@ services:
       - 3306:3306
     healthcheck:
       test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD']
+    mem_limit: 2g
+
+  celery:
+    build: ../src
+    env_file:
+      - dev.env
+    depends_on:
+      - migrate
+      - mysql
+      - rabbitmq
+    environment:
+      - MODE=CELERY
+    volumes:
+      - ../src:/app/
+    mem_limit: 1g
+
+  rabbitmq:
+    image: rabbitmq:3.8.6-management
+    ports:
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbit_user
+      - RABBITMQ_DEFAULT_PASS=rabbit_password
+    mem_limit: 300m
 
 volumes:
   db-data:

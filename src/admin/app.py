@@ -1,3 +1,4 @@
+from celery import Celery
 from flask import Flask, request, session
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -6,6 +7,9 @@ from flask_babelex import Babel
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
+
+celery = Celery(app.name)
+celery.conf.update(app.config)
 
 db = SQLAlchemy()
 babel = Babel()
