@@ -1,6 +1,6 @@
 import os
 
-from admin import app
+from admin import app, celery  # noqa
 
 
 def parse_bool(s: str):

@@ -19,6 +19,8 @@ flask-mysql = "*"
 mysqlclient = "*"
 flask-migrate = "*"
 gunicorn = "*"
+celery = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

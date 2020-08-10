@@ -4,6 +4,8 @@ if [ "$MODE" == "WEB_PRODUCTION" ]; then
   pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b 0.0.0.0:80 run:app
 elif [ "$MODE" == "WEB" ]; then
     pipenv run python run.py
+elif [ "$MODE" == "CELERY" ]; then
+    pipenv run celery worker -A run:celery --loglevel=info -B --concurrency "${CELERY_CONCURRENCY:-2}" -Q "${CELERY_QUEUES:-celery}"
 elif [ "$MODE" == "MIGRATE" ]; then
   export FLASK_APP=admin/app
   pipenv run flask db upgrade
