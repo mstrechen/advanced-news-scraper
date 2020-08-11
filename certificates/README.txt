@@ -1,0 +1,1 @@
+Place privkey.pem and fullchain.pem in this directory (think about hardlink)

@@ -3,8 +3,8 @@
 if [ "$MODE" == "WEB_PRODUCTION" ]; then
   KEYFILE=""
   CERTFILE=""
-  if [ ! -z "$SSL_KEYFILE" ]; then KEYFILE="--keyfile $SSL_KEYFILE"; fi
-  if [ ! -z "$SSL_CERTFILE" ]; then CERTFILE="--certfile $SSL_CERTFILE"; fi
+  if [ -f "/certificates/privkey.pem" ]; then KEYFILE="--keyfile /certificates/privkey.pem"; fi
+  if [ -f "/certificates/fullchain.pem" ]; then CERTFILE="--certfile /certificates/fullchain.pem"; fi
   # shellcheck disable=SC2086
   pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b 0.0.0.0:80 $CERTFILE $KEYFILE run:app
 elif [ "$MODE" == "WEB" ]; then
