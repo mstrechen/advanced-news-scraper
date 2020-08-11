@@ -4,6 +4,7 @@ services:
     build: ../src
     ports:
     - 80:80
+    - 443:443
     env_file:
       - prod.env
     depends_on:
