@@ -11,6 +11,8 @@ services:
       - migrate
     environment:
       - MODE=WEB_PRODUCTION
+    volumes:
+      - ../certificates:/certificates
     mem_limit: 1gb
 
   migrate:
