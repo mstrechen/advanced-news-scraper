@@ -42,25 +42,25 @@ services:
   celery:
     build: ../src
     env_file:
-      - dev.env
+      - prod.env
     depends_on:
       - migrate
       - mysql
       - rabbitmq
     environment:
       - MODE=CELERY
-    volumes:
-      - ../src:/app/
     mem_limit: 1g
 
   rabbitmq:
     image: rabbitmq:3.8.6-management
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/mnesia/
     ports:
       - 15672:15672
-    environment:
-      - RABBITMQ_DEFAULT_USER=rabbit_user
-      - RABBITMQ_DEFAULT_PASS=rabbit_password
+    env_file:
+      - prod.env
     mem_limit: 300m
 
 volumes:
   db-data:
+  rabbitmq-data:
