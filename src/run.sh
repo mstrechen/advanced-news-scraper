@@ -1,7 +1,12 @@
 #!/bin/bash
 
 if [ "$MODE" == "WEB_PRODUCTION" ]; then
-  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b 0.0.0.0:80 run:app
+  KEYFILE=""
+  CERTFILE=""
+  if [ ! -z "$SSL_KEYFILE" ]; then KEYFILE="--keyfile $SSL_KEYFILE"; fi
+  if [ ! -z "$SSL_CERTFILE" ]; then CERTFILE="--certfile $SSL_CERTFILE"; fi
+  # shellcheck disable=SC2086
+  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b 0.0.0.0:80 $CERTFILE $KEYFILE run:app
 elif [ "$MODE" == "WEB" ]; then
     pipenv run python run.py
 elif [ "$MODE" == "CELERY" ]; then
