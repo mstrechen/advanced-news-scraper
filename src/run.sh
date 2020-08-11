@@ -1,12 +1,14 @@
 #!/bin/bash
 
+set -x
+
 if [ "$MODE" == "WEB_PRODUCTION" ]; then
   KEYFILE=""
   CERTFILE=""
   if [ -f "/certificates/privkey.pem" ]; then KEYFILE="--keyfile /certificates/privkey.pem"; fi
   if [ -f "/certificates/fullchain.pem" ]; then CERTFILE="--certfile /certificates/fullchain.pem"; fi
   # shellcheck disable=SC2086
-  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b 0.0.0.0:80 $CERTFILE $KEYFILE run:app
+  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b :80 -b :443 $CERTFILE $KEYFILE run:app
 elif [ "$MODE" == "WEB" ]; then
     pipenv run python run.py
 elif [ "$MODE" == "CELERY" ]; then
