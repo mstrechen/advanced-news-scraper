@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 from flask_seasurf import SeaSurf
 from flask_talisman import Talisman
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -17,6 +18,7 @@ babel = Babel()
 migrate = Migrate()
 csrf = SeaSurf()
 talisman = Talisman()
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
 def init_app():
