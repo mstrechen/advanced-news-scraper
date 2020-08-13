@@ -21,6 +21,8 @@ flask-migrate = "*"
 gunicorn = "*"
 celery = "*"
 requests = "*"
+flask-talisman = "*"
+flask-seasurf = "*"
 
 [requires]
 python_version = "3.7"

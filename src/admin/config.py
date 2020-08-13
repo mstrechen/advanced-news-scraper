@@ -4,7 +4,7 @@ from celery.schedules import crontab
 
 
 def parse_bool(s: str):
-    return s in ['1', 'T', 'true', 'True']
+    return s in ['1', 'T', 'true', 'True', True]
 
 
 def parse_list(s: str, default=None):
@@ -12,6 +12,8 @@ def parse_list(s: str, default=None):
         return default or []
     return s.split(';')
 
+
+DEBUG = os.environ.get('DEBUG')
 
 FLASK_ADMIN_SWATCH = 'yeti'
 SUPPORTED_LANGUAGES = ['en', 'uk']
@@ -57,3 +59,7 @@ SQLALCHEMY_ECHO = parse_bool(os.environ.get('SQLALCHEMY_ECHO'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'WARNING')
+
+
+FORCE_HTTPS = not DEBUG and parse_bool(os.environ.get('FORCE_HTTPS', True))
+CONTENT_SECURITY_POLICY = {}  # https://github.com/GoogleCloudPlatform/flask-talisman#options

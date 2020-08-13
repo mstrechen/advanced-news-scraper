@@ -9,9 +9,10 @@ help:
 	@echo "  prod-recreate - same as prod, but forces to recreate containers"
 	@echo "  new-migration - create new migration. Usage: \$ make new-migration MESSAGE=_your_message_ "
 
-dev:
+dev: stop
 	docker-compose up
 
+build: rebuild
 rebuild:
 	docker-compose build
 
@@ -26,3 +27,6 @@ new-migration:
 
 sync-from-git:
 	git pull
+
+stop:
+	docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
