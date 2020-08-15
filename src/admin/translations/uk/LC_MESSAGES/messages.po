@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: mvstrechen@gmail.com\n"
-"POT-Creation-Date: 2020-08-08 02:23+0000\n"
+"POT-Creation-Date: 2020-08-15 02:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Matvii Strechen <mvstrechen@gmail.com>\n"
 "Language: uk\n"
@@ -19,17 +19,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: admin/templates/admin/index.html:8
+#: templates/admin/index.html:8 templates/index.html:8
 msgid "Advanced tool for scrapping & managing articles."
 msgstr "Просунутий інструмент для збору & обробки новин"
 
-#: admin/templates/admin/index.html:9
-msgid "Back"
-msgstr "Назад"
+#: templates/index.html:12
+msgid "Logout"
+msgstr "Вийти"
+
+#: templates/admin/index.html:11 templates/index.html:19
+#: templates/security/login_user.html:7
+msgid "Login"
+msgstr "Увійти"
+
+#: templates/security/login_user.html:19
+msgid "Not yet signed up? Please"
+msgstr "Ще не зареєстровані? Створіть"
+
+#: templates/security/login_user.html:20
+msgid "обліковий запис"
+msgstr ""
+
+#: templates/security/register_user.html:7
+msgid "Register"
+msgstr "Зареєструватися"
+
+#: templates/security/register_user.html:21
+msgid "Already signed up? Please"
+msgstr "Вже зареєстровані? Зайдіть"
+
+#: templates/security/register_user.html:22
+msgid "log in"
+msgstr "з існуючим акаунтом"
 
 #~ msgid "Such a string!"
 #~ msgstr ""
 
 #~ msgid "Back to the future"
 #~ msgstr ""
+
+#~ msgid "Back"
+#~ msgstr "Назад"
 

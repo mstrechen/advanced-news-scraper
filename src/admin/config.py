@@ -63,3 +63,7 @@ LOGLEVEL = os.environ.get('LOGLEVEL', 'WARNING')
 
 FORCE_HTTPS = not DEBUG and parse_bool(os.environ.get('FORCE_HTTPS', True))
 CONTENT_SECURITY_POLICY = {}  # https://github.com/GoogleCloudPlatform/flask-talisman#options
+
+SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT', 'somesalt')
+SECURITY_REGISTERABLE = parse_bool(os.environ.get('SECURITY_REGISTERABLE', True))
+SECURITY_SEND_REGISTER_EMAIL = parse_bool(os.environ.get('SECURITY_SEND_REGISTER_EMAIL', False))
