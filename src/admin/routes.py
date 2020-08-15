@@ -4,7 +4,7 @@ from flask_login import current_user
 
 from admin.app import app, db
 from admin.models.user import User
-from flask import send_file, render_template
+from flask import send_file
 
 import flask_admin as admin
 

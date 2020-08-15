@@ -41,4 +41,3 @@ class UsersView(ProtectedView, sqla.ModelView):
     column_formatters = {
         'roles': roles_formatter
     }
-

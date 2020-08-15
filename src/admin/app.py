@@ -41,7 +41,7 @@ def init_app(admin):
 def _init_flask_security(app, db, admin):
     from admin.models.user import User, UserRole
     user_datastore = SQLAlchemyUserDatastore(db, User, UserRole)
-    security = Security(app, user_datastore, register_form=RegisterForm)  #noqa
+    security = Security(app, user_datastore, register_form=RegisterForm)  # noqa
 
     @security.context_processor
     def security_context_processor():
@@ -63,5 +63,5 @@ def get_locale():
     return session.get('lang', 'en')
 
 
-from admin.routes import admin as Admin # noqa: E402, F401
+from admin.routes import admin as Admin  # noqa: E402, F401
 init_app(Admin)
