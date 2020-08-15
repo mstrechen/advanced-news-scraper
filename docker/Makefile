@@ -9,8 +9,8 @@ help:
 	@echo "  prod-recreate - same as prod, but forces to recreate containers"
 	@echo "  new-migration - create new migration. Usage: \$ make new-migration MESSAGE=_your_message_ "
 
-dev: stop
-	docker-compose up
+dev: stop-web-celery
+	docker-compose up -d
 
 build: rebuild
 rebuild:
@@ -25,8 +25,20 @@ prod-recreate:
 new-migration:
 	MODE=NEW_MIGRATION MIGRATION_MESSAGE="${MESSAGE}" docker-compose up migrate
 
+migrate:
+	docker-compose up migrate
+
 sync-from-git:
 	git pull
 
-stop:
+full-stop:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+
+stop-web-celery:
+	docker-compose stop celery web
+
+generate-translations:
+	MODE=GENERATE_TRANSLATIONS docker-compose up migrate
+
+compile-translations:
+	MODE=COMPILE_TRANSLATIONS docker-compose up migrate

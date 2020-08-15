@@ -23,6 +23,8 @@ celery = "*"
 requests = "*"
 flask-talisman = "*"
 flask-seasurf = "*"
+flask-security = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.7"

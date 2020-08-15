@@ -1,0 +1,35 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+  {{ super() }}
+  <div class="container">
+    <div>
+        <div class="col-sm-10 col-sm-offset-1">
+            <h1>Advanced news scraper</h1>
+            <p>{{gettext("Advanced tool for scrapping & managing articles." )}}</p>
+
+            {% if current_user.is_active and current_user.is_authenticated %}
+                <a class="btn btn-primary" href="{{ url_for('security.logout')  }}">
+                    {{ gettext("Logout") }}
+                    <i class="glyphicon glyphicon-log-out" style="margin-left: 0.25em"></i>
+                </a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('security.login')  }}">
+                    <i class="glyphicon glyphicon-log-in" style="margin-right: 0.25em"></i>
+
+                    {{ gettext("Login") }}
+                </a>
+            {% endif %}
+            <br><br>
+            <div class="btn-group" role="group" aria-label="Basic example">
+
+            {% for lang in ['uk', 'en'] %}
+                <a type="button" class="btn btn-info" href="{{url_tools.update_get_args(request.path, lang=lang) }}">
+                    {{babel.Locale.parse(lang).get_language_name(lang) }}
+                </a>
+            {% endfor %}
+            </div>
+    </div>
+        </div>
+    </div>
+  </div>
+{% endblock body %}

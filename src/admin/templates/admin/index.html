@@ -6,7 +6,10 @@
         <div class="col-sm-10 col-sm-offset-1">
             <h1>Advanced news scraper</h1>
             <p>{{gettext("Advanced tool for scrapping & managing articles." )}}</p>
-            <a class="btn btn-primary" href="/"><i class="glyphicon glyphicon-chevron-left"></i> {{ gettext("Back") }}</a>
+            <a class="btn btn-primary" href="{{ url_for('security.login')  }}">
+                <i class="glyphicon glyphicon-log-in" style="margin-right: 0.25em"></i>
+                {{ gettext("Login") }}
+            </a>
         </div>
     </div>
 </div>
