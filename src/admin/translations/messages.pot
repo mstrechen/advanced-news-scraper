@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-15 02:22+0000\n"
+"POT-Creation-Date: 2020-08-22 21:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,18 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
+
+#: routes.py:37
+msgid "Users"
+msgstr ""
+
+#: routes.py:38 routes.py:39
+msgid "Sites"
+msgstr ""
+
+#: routes.py:39
+msgid "Site parsers"
+msgstr ""
 
 #: templates/admin/index.html:8 templates/index.html:8
 msgid "Advanced tool for scrapping & managing articles."
@@ -30,11 +42,11 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: templates/security/login_user.html:19
+#: templates/security/login_user.html:18
 msgid "Not yet signed up? Please"
 msgstr ""
 
-#: templates/security/login_user.html:20
+#: templates/security/login_user.html:19
 msgid "register for an account"
 msgstr ""
 

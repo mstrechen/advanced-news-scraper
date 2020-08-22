@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: mvstrechen@gmail.com\n"
-"POT-Creation-Date: 2020-08-15 02:22+0000\n"
+"POT-Creation-Date: 2020-08-22 21:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Matvii Strechen <mvstrechen@gmail.com>\n"
 "Language: uk\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
+
+#: routes.py:37
+msgid "Users"
+msgstr "Користувачі"
+
+#: routes.py:38 routes.py:39
+msgid "Sites"
+msgstr "Сайти"
+
+#: routes.py:39
+msgid "Site parsers"
+msgstr "Парсери сайтів"
 
 #: templates/admin/index.html:8 templates/index.html:8
 msgid "Advanced tool for scrapping & managing articles."
@@ -32,13 +44,13 @@ msgstr "Вийти"
 msgid "Login"
 msgstr "Увійти"
 
-#: templates/security/login_user.html:19
+#: templates/security/login_user.html:18
 msgid "Not yet signed up? Please"
 msgstr "Ще не зареєстровані? Створіть"
 
-#: templates/security/login_user.html:20
-msgid "обліковий запис"
-msgstr ""
+#: templates/security/login_user.html:19
+msgid "register for an account"
+msgstr "акаунт"
 
 #: templates/security/register_user.html:7
 msgid "Register"
@@ -60,4 +72,7 @@ msgstr "з існуючим акаунтом"
 
 #~ msgid "Back"
 #~ msgstr "Назад"
+
+#~ msgid "обліковий запис"
+#~ msgstr ""
 

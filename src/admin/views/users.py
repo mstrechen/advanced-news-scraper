@@ -1,6 +1,6 @@
-from flask_admin.contrib import sqla
 from markupsafe import Markup
 
+from admin.models.user import User
 from admin.utils.views import ProtectedView
 
 
@@ -12,8 +12,9 @@ def roles_formatter(view, context, model, name):
     ))
 
 
-class UsersView(ProtectedView, sqla.ModelView):
-
+class UsersView(ProtectedView):
+    CONFIG_MODEL = User
+    can_delete = False
     can_view_details = True  # show a modal dialog with records details
     action_disallowed_list = ['delete', ]
     column_exclude_list = ['password', ]
