@@ -1,8 +1,8 @@
 from admin.models.sites import SiteParser
-from admin.utils.views import ProtectedView
+from admin.utils.views import PatchedModelView
 
 
-class SiteParsersView(ProtectedView):
+class SiteParsersView(PatchedModelView):
     CONFIG_MODEL = SiteParser
 
     can_view_details = True

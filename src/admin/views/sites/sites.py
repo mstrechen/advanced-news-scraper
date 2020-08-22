@@ -1,8 +1,8 @@
 from admin.models.sites import Site
-from admin.utils.views import ProtectedView
+from admin.utils.views import PatchedModelView
 
 
-class SitesView(ProtectedView):
+class SitesView(PatchedModelView):
     CONFIG_MODEL = Site
 
     can_view_details = True

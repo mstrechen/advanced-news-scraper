@@ -4,13 +4,6 @@ from flask_security import RoleMixin
 from admin.app import db
 
 
-class UserRoleEnum:
-    ADMIN = 'admin'
-    USER = 'user'
-
-    ALL_ROLES = [ADMIN, USER]
-
-
 class UserRole(db.Model, RoleMixin):
     __tablename__ = 'user_roles'
     id = db.Column(db.Integer(), primary_key=True)

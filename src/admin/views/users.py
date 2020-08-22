@@ -1,7 +1,7 @@
 from markupsafe import Markup
 
 from admin.models.user import User
-from admin.utils.views import ProtectedView
+from admin.utils.views import PatchedModelView
 
 
 def roles_formatter(view, context, model, name):
@@ -12,7 +12,7 @@ def roles_formatter(view, context, model, name):
     ))
 
 
-class UsersView(ProtectedView):
+class UsersView(PatchedModelView):
     CONFIG_MODEL = User
     can_delete = False
     can_view_details = True  # show a modal dialog with records details

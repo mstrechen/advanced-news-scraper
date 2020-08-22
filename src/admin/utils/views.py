@@ -4,7 +4,7 @@ from flask_security import current_user
 from werkzeug.utils import redirect
 
 
-class ProtectedView(sqla.ModelView):
+class PatchedModelView(sqla.ModelView):
     CONFIG_MODEL = None
     CONFIG_NAME = None
     CONFIG_CATEGORY = None
@@ -19,7 +19,7 @@ class ProtectedView(sqla.ModelView):
     def __init__(self, session,
                  name=None, category=None, endpoint=None, url=None, static_folder=None,
                  menu_class_name=None, menu_icon_type=None, menu_icon_value=None, model=None):
-        super(ProtectedView, self).__init__(
+        super(PatchedModelView, self).__init__(
             model=model or self.CONFIG_MODEL,
             session=session,
             name=name or self.CONFIG_NAME,
