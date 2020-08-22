@@ -28,6 +28,11 @@ new-migration:
 migrate:
 	docker-compose up migrate
 
+downgrade-db:
+	MODE=DOWNGRADE docker-compose up migrate
+
+upgrade-db: migrate
+
 sync-from-git:
 	git pull
 

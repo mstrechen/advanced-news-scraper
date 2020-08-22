@@ -16,6 +16,9 @@ elif [ "$MODE" == "CELERY" ]; then
 elif [ "$MODE" == "MIGRATE" ]; then
   export FLASK_APP=admin/app
   pipenv run flask db upgrade
+elif [ "$MODE" == "DOWNGRADE" ]; then
+  export FLASK_APP=admin/app
+  pipenv run flask db downgrade
 elif [ "$MODE" == "NEW_MIGRATION" ]; then
   export FLASK_APP=admin/app
   pipenv run flask db revision -m "$MIGRATION_MESSAGE"
