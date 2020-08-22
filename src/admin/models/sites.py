@@ -3,7 +3,6 @@ from admin.app import db
 from .user import User
 
 
-
 class Site(db.Model):
     __tablename__ = 'sites'
     site_id = db.Column(db.INTEGER, primary_key=True)
