@@ -18,32 +18,6 @@ depends_on = None
 
 
 def upgrade():
-    '''
-Table "articles" {
-  "article_id" int(11) [pk, not null, increment]
-  "site_id" int(11) [not null]
-  "last_text_id" int(11) [null]
-  "language" VARCHAR(3) [null]
-  "url" VARCHAR(255) [not null, note: "Should it be TEXT?"]
-}
-
-Table article_texts {
-  "text_id" int(11) [pk, not null, increment]
-  "article_id" int(11) [not null]
-  "parser_id" int(11) [not null]
-
-  "title" TEXT [not null]
-  "content" MEDIUMTEXT [not null]
-  "hash" VARCHAR(64) [not null]
-
-  "downloaded" timestamp [default: `now()`, not null]
-}
-
-
-Ref: "articles"."site_id" > "sites"."site_id"
-Ref: "article_texts"."parser_id" > "site_parsers"."parser_id"
-Ref: "article_texts"."article_id" > "articles"."article_id"
-'''
     op.create_table(
         'articles',
         sa.Column('article_id', sa.INTEGER, autoincrement=True, primary_key=True),
