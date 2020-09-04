@@ -21,7 +21,8 @@ class UsersView(PatchedModelView):
 
     column_list = ['full_name', 'email', 'active', 'roles']
     column_editable_list = []
-    form_edit_rules = ['full_name', 'email', 'active']
+    form_edit_rules = ['full_name', 'email', ]
+    column_details_exclude_list = ['password']
 
     form_widget_args = {
         'id': {

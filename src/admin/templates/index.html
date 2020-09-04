@@ -24,7 +24,7 @@
 
             {% for lang in ['uk', 'en'] %}
                 <a type="button" class="btn btn-info" href="{{url_tools.update_get_args(request.path, lang=lang) }}">
-                    {{babel.Locale.parse(lang).get_language_name(lang) }}
+                    {{babel.Locale.parse(lang).get_language_name(lang).capitalize() }}
                 </a>
             {% endfor %}
             </div>
