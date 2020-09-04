@@ -44,7 +44,9 @@ MENU = [
         (lazy_gettext('Sites'), SitesView),
         (lazy_gettext('Site parsers'), SiteParsersView),
     ]),
-    (lazy_gettext('Articles'), ArticlesView, {'menu_icon_type': ICON_TYPE_GLYPH, 'menu_icon_value': 'glyphicon-folder-open'}),
+    (lazy_gettext('Articles'), ArticlesView, {
+        'menu_icon_type': ICON_TYPE_GLYPH, 'menu_icon_value': 'glyphicon-folder-open'
+    }),
     (lazy_gettext('Tags'), [
         (lazy_gettext('Tags'), TagsView),
         (lazy_gettext('Tag rules'), TagRulesView),

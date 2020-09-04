@@ -1,5 +1,3 @@
-import random
-
 from admin.models.articles import Article
 from admin.utils.views import PatchedModelView
 

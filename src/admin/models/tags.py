@@ -1,5 +1,3 @@
-from sqlalchemy.orm import backref, relationship, foreign
-
 from admin.app import db
 
 
