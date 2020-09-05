@@ -15,3 +15,4 @@ class SiteParser(db.Model):
     site_id = db.Column(db.INTEGER, db.ForeignKey(Site.site_id), nullable=False)
     created = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.now())
     comment = db.Column(db.TEXT, nullable=False, default='')
+    rules = db.Column(db.TEXT, nullable=False)
