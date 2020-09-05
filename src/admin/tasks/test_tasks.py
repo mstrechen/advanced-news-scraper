@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 @celery.task(queue='test')
-def ping_host(host='http://chytalka.space'):
+def ping_host(host='https://chytalka.space'):
     logger.info("Task ping_host started with host %s", host)
     res = requests.get(host)
     if res.status_code == 200:
