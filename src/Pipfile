@@ -25,6 +25,7 @@ flask-talisman = "*"
 flask-seasurf = "*"
 flask-security = "*"
 bcrypt = "*"
+python-logstash = "*"
 
 [requires]
 python_version = "3.7"
