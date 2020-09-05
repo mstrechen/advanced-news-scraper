@@ -12,10 +12,13 @@ class RuleTypes:
 class TagRule(db.Model):
     __tablename__ = 'tag_rules'
     rule_id = db.Column(db.INTEGER, primary_key=True)
-    tag_id = db.Column(db.INTEGER, nullable=False)
+    tag_id = db.Column(db.INTEGER, db.ForeignKey('tags.tag_id'), nullable=False)
     rule_type = db.Column(db.Enum(*RuleTypes.ALL), nullable=False)
     rule_language = db.Column(db.VARCHAR(3), nullable=False)
     rule_query = db.Column(db.TEXT, nullable=False)
-    creator_id = db.Column(db.INTEGER, nullable=False)
+    creator_id = db.Column(db.INTEGER, db.ForeignKey('users.id'), nullable=False)
     enabled_timestamp = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.now())
     disabled_timestamp = db.Column(db.TIMESTAMP, nullable=True)
+
+    tag = db.relationship('Tag', remote_side=[tag_id], backref='rules', )
+    creator = db.relationship('User', remote_side=[creator_id])

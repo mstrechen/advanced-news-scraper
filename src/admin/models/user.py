@@ -25,6 +25,9 @@ class User(db.Model, UserMixin):
     roles = db.relationship('UserRole', secondary='roles_to_users',
                             backref=db.backref('users', lazy='dynamic'))
 
+    def __repr__(self):
+        return self.full_name
+
 
 roles_to_users = db.Table(
     'roles_to_users',

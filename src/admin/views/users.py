@@ -15,6 +15,7 @@ def roles_formatter(view, context, model, name):
 class UsersView(PatchedModelView):
     CONFIG_MODEL = User
     can_delete = False
+    can_create = False
     can_view_details = True  # show a modal dialog with records details
     action_disallowed_list = ['delete', ]
     column_exclude_list = ['password', ]
