@@ -51,7 +51,7 @@ CELERY_IMPORTS = 'admin.tasks'
 CELERYBEAT_SCHEDULE = {
     'tasks.test_tasks.ping_host': {
         'task': 'admin.tasks.test_tasks.ping_host',
-        'schedule': crontab(minute='0', hour='*/2')
+        'schedule': crontab(minute='*/10')
     }
 }
 
