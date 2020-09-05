@@ -1,7 +1,7 @@
 import logging
 
 import logstash
-from celery import Celery
+from celery import Celery, signals
 from flask import Flask, request, session, url_for
 from flask_admin import helpers as admin_helpers
 from flask_migrate import Migrate
@@ -61,13 +61,19 @@ def _init_loggers(app: Flask):
     logger.setLevel(app.config['LOGLEVEL'])
 
     if app.config['LOGSTASH_HOST']:
-        handler = logstash.LogstashHandler(
-            app.config['LOGSTASH_HOST'],
-            app.config['LOGSTASH_PORT'],
-            version=1,
-        )
-        handler.setLevel(app.config['LOGSTASH_LOGLEVEL'])
-        logger.addHandler(handler)
+        _init_logstash_handler(logger)
+
+
+@signals.after_setup_logger.connect
+def _init_logstash_handler(logger=None, loglevel=logging.DEBUG, **kwargs):
+    handler = logstash.TCPLogstashHandler(
+        app.config['LOGSTASH_HOST'],
+        app.config['LOGSTASH_PORT'],
+        version=1,
+    )
+    handler.setLevel(app.config['LOGSTASH_LOGLEVEL'])
+    logger.addHandler(handler)
+    return logger
 
 
 @babel.localeselector
