@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.2'
 services:
   web:
     build: ../src
@@ -19,8 +19,7 @@ services:
     env_file:
       - dev.env
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     environment:
       - MODE=${MODE:-MIGRATE}
       - MIGRATION_MESSAGE
@@ -64,5 +63,57 @@ services:
       - RABBITMQ_DEFAULT_USER=rabbit_user
       - RABBITMQ_DEFAULT_PASS=rabbit_password
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    volumes:
+      - type: bind
+        source: ./config/dev/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+      - type: volume
+        source: elasticsearch
+        target: /usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
+
+
+#  You don't need this on local machine, except for debug purposes
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:7.9.1
+#    volumes:
+#      - type: bind
+#        source: ./config/dev/kibana.yml
+#        target: /usr/share/kibana/config/kibana.yml
+#        read_only: true
+#    ports:
+#      - "5601:5601"
+#    depends_on:
+#      - elasticsearch
+#
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:7.9.1
+#    volumes:
+#      - type: bind
+#        source: ./config/dev/logstash.yml
+#        target: /usr/share/logstash/config/logstash.yml
+#        read_only: true
+#      - type: bind
+#        source: ./config/dev/logstash-pipeline.conf
+#        target: /usr/share/logstash/pipeline/logstash.conf
+#        read_only: true
+#    ports:
+#      - "5000:5000/tcp"
+#      - "5000:5000/udp"
+#      - "9600:9600"
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+#    depends_on:
+#      - elasticsearch
+
 volumes:
   db-data:
+  elasticsearch:
