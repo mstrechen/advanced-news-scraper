@@ -88,8 +88,11 @@ services:
       - type: volume
         source: elasticsearch
         target: /usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     environment:
-      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
+      ES_JAVA_OPTS: "-Xmx1024m -Xms1024m"
       discovery.type: single-node
 
   kibana:
@@ -100,7 +103,7 @@ services:
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
     ports:
-      - "5931:5601"
+      - "5601:5601"
     depends_on:
       - elasticsearch
 
@@ -115,6 +118,10 @@ services:
         source: ./config/prod/logstash-pipeline.conf
         target: /usr/share/logstash/pipeline/logstash.conf
         read_only: true
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
