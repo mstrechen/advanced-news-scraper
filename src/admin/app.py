@@ -1,3 +1,6 @@
+import logging
+
+import logstash
 from celery import Celery
 from flask import Flask, request, session, url_for
 from flask_admin import helpers as admin_helpers
@@ -34,8 +37,7 @@ def init_app(admin):
         content_security_policy=app.config['CONTENT_SECURITY_POLICY']
     )
     _init_flask_security(app, db, admin)
-
-    app.logger.setLevel(app.config['LOGLEVEL'])
+    _init_loggers(app)
 
 
 def _init_flask_security(app, db, admin):
@@ -51,6 +53,21 @@ def _init_flask_security(app, db, admin):
             h=admin_helpers,
             get_url=url_for
         )
+
+
+def _init_loggers(app: Flask):
+    app.logger.setLevel(app.config['LOGLEVEL'])
+    logger = logging.getLogger()
+    logger.setLevel(app.config['LOGLEVEL'])
+
+    if app.config['LOGSTASH_HOST']:
+        handler = logstash.LogstashHandler(
+            app.config['LOGSTASH_HOST'],
+            app.config['LOGSTASH_PORT'],
+            version=1,
+        )
+        handler.setLevel(app.config['LOGSTASH_LOGLEVEL'])
+        logger.addHandler(handler)
 
 
 @babel.localeselector

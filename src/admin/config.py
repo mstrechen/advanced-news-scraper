@@ -59,7 +59,9 @@ SQLALCHEMY_ECHO = parse_bool(os.environ.get('SQLALCHEMY_ECHO'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'WARNING')
-
+LOGSTASH_HOST = os.environ.get('LOGSTASH_HOST')
+LOGSTASH_PORT = int(os.environ.get('LOGSTASH_PORT', 0))
+LOGSTASH_LOGLEVEL = os.environ.get('LOGSTASH_LOGLEVEL', 'INFO')
 
 FORCE_HTTPS = not DEBUG and parse_bool(os.environ.get('FORCE_HTTPS', True))
 CONTENT_SECURITY_POLICY = {}  # https://github.com/GoogleCloudPlatform/flask-talisman#options
