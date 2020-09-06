@@ -40,6 +40,7 @@ def init_app(admin):
     _init_loggers(app)
     _init_es(app)
 
+
 def _init_flask_security(app, db, admin):
     from admin.models.user import User, UserRole
     user_datastore = SQLAlchemyUserDatastore(db, User, UserRole)
