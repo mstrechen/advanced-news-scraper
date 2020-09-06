@@ -1,6 +1,7 @@
 from functools import lru_cache
 from selenium import webdriver
 
+
 @lru_cache(maxsize=None)
 def get_driver():
     chrome_options = webdriver.ChromeOptions()
