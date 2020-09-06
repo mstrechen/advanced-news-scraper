@@ -26,6 +26,8 @@ flask-seasurf = "*"
 flask-security = "*"
 bcrypt = "*"
 python-logstash = "*"
+selenium = "*"
+PyVirtualDisplay = "*"
 
 [requires]
 python_version = "3.7"
