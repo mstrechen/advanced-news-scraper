@@ -1,9 +1,7 @@
 import logging
-from time import sleep
 
 import logstash
 from celery import Celery, signals
-from elasticsearch_dsl import connections
 from flask import Flask, request, session, url_for
 from flask_admin import helpers as admin_helpers
 from flask_migrate import Migrate
