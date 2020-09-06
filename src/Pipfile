@@ -28,6 +28,7 @@ bcrypt = "*"
 python-logstash = "*"
 selenium = "*"
 PyVirtualDisplay = "*"
+elasticsearch-dsl = "==7"
 
 [requires]
 python_version = "3.7"

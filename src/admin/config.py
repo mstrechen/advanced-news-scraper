@@ -14,6 +14,7 @@ def parse_list(s: str, default=None):
 
 
 DEBUG = os.environ.get('DEBUG')
+MODE = os.environ.get('MODE')
 
 FLASK_ADMIN_SWATCH = 'yeti'
 SUPPORTED_LANGUAGES = ['en', 'uk']
@@ -42,6 +43,7 @@ _BROKER_PORT = int(os.environ.get('RABBITMQ_PORT', 5672))
 _BROKER_VHOST = os.environ.get('RABBITMQ_VHOST', '/')
 
 BROKER_URL = f'{_BROKER_SCHEME}://{_BROKER_USER}:{_BROKER_PASSWORD}@{_BROKER_HOST}:{_BROKER_PORT}/{_BROKER_VHOST}'
+ELASTICSEARCH_HOSTS = parse_list(os.environ.get('ELASTICSEARCH_HOSTS'), ['elasticsearch:9200'])
 
 CELERY_RESULT_BACKEND = \
     f'db+mysql://{MYSQL_DATABASE_USER}:{MYSQL_DATABASE_PASSWORD}' \

@@ -38,6 +38,7 @@ def init_app(admin):
     )
     _init_flask_security(app, db, admin)
     _init_loggers(app)
+    _init_es(app)
 
 
 def _init_flask_security(app, db, admin):
@@ -62,6 +63,11 @@ def _init_loggers(app: Flask):
 
     if app.config['LOGSTASH_HOST']:
         _init_logstash_handler(logger)
+
+
+def _init_es(app: Flask):
+    from admin.init_scripts.es import init_es
+    init_es(app)
 
 
 @signals.after_setup_logger.connect
