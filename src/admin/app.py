@@ -20,7 +20,7 @@ app.config.from_pyfile('config.py')
 celery = Celery(app.name)
 celery.conf.update(app.config)
 
-db = SQLAlchemy()
+db = SQLAlchemy(use_native_unicode=True)
 babel = Babel()
 migrate = Migrate()
 csrf = SeaSurf()

@@ -2,10 +2,10 @@ from time import sleep
 
 from elasticsearch_dsl import connections
 from flask import Flask
-from admin.models.articles_es import ArticleText
+from admin.models.articles_es import ArticleTextEs
 
 
-MODELS = [ArticleText, ]
+MODELS = [ArticleTextEs, ]
 
 
 def init_es(app: Flask):
