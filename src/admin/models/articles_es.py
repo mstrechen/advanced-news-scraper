@@ -4,11 +4,11 @@ from elasticsearch_dsl import Document, Text, Integer, Keyword
 SUPPORTED_LANGUAGES_ANALYZER_MAPPING = {
     'uk': 'ukrainian',
     'en': 'english',
-    'ru': 'russian'
+    'ru': 'russian',
 }
 
 
-class ArticleText(Document):
+class ArticleTextEs(Document):
     """
     Has the same meaning as sqlalchemy's ArticleText model, but also stores some Article data
     """
@@ -17,11 +17,11 @@ class ArticleText(Document):
     language = Keyword(required=True)
     url = Keyword(required=True)
 
-    title = Text(required=True, fields={
+    title = Text(required=False, fields={
         lang: Text(analyzer=analyzer)
         for lang, analyzer in SUPPORTED_LANGUAGES_ANALYZER_MAPPING.items()
     })
-    content = Text(required=True, fields={
+    content = Text(required=False, fields={
         lang: Text(analyzer=analyzer)
         for lang, analyzer in SUPPORTED_LANGUAGES_ANALYZER_MAPPING.items()
     })
