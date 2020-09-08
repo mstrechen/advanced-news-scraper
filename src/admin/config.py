@@ -54,6 +54,10 @@ CELERYBEAT_SCHEDULE = {
     'tasks.test_tasks.ping_host': {
         'task': 'admin.tasks.test_tasks.ping_host',
         'schedule': crontab(minute='*/10')
+    },
+    'tasks.scraping.run_site_parsers': {
+        'task': 'admin.tasks.scraping.run_site_parsers',
+        'schedule': crontab(minute='*/15')
     }
 }
 
