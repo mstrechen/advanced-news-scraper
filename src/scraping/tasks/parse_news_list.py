@@ -1,8 +1,10 @@
 from admin import celery
 from admin.models.site_parsers import SiteParser
+from admin.models.articles import Article
 from admin.app import Session
 
 from scraping import get_driver
+from scraping.tasks.parse_article import parse_article_task
 from selenium.webdriver.common.by import By
 
 import json
@@ -40,6 +42,14 @@ def parse_config(site_parser):
     return list_url, item_xpath, item_link_subpath, next_xpath, article_rules
 
 
+def is_article_exists(link):
+    session = Session()
+    article_exists = session.query(Article).filter_by(url=link).count() > 0
+    session.close()
+
+    return article_exists
+
+
 @celery.task(queue='test')
 def parse_news_list_task(site_parser_id):
     pass
@@ -54,6 +64,7 @@ def parse_news_list_task(site_parser_id):
 
     next_url = list_url
     fetched_articles = 0
+    reached_parsed_article = False
     limit = 10
     while fetched_articles < limit:
         page = driver.get(next_url)
@@ -63,12 +74,15 @@ def parse_news_list_task(site_parser_id):
         for item in news_items:
             link = item.find_element(By.XPATH, ".//" + item_link_subpath).get_attribute("href")
 
-            # check if article exists
-            # create task for parsing articles
+            reached_parsed_article |= is_article_exists(link)
+            if reached_parsed_article:
+                break
+
+            parse_article_task.delay(link, article_rules)
 
             fetched_articles += 1
             if fetched_articles == limit:
                 break
 
-        if fetched_articles == limit:
+        if reached_parsed_article or fetched_articles == limit:
             break
