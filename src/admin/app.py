@@ -10,6 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 from flask_seasurf import SeaSurf
 from flask_talisman import Talisman
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from admin.utils.forms import RegisterForm
@@ -26,6 +28,8 @@ migrate = Migrate()
 csrf = SeaSurf()
 talisman = Talisman()
 app.wsgi_app = ProxyFix(app.wsgi_app)
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+Session = sessionmaker(bind=engine)
 
 
 def init_app(admin):
