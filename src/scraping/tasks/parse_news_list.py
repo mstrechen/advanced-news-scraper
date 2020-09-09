@@ -41,7 +41,8 @@ def parse_config(site_parser):
 
 
 @celery.task(queue='test')
-def parse_news_list(site_parser_id):
+def parse_news_list_task(site_parser_id):
+    pass
     logger.info("Parsing news list for site parser {}".format(site_parser_id))
     site_parser = fetch_site_parser_by_id(site_parser_id)
     if not site_parser.has_newslist_parser:
