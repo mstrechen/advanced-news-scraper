@@ -6,7 +6,7 @@ from admin import celery
 from admin.models.sites import Site
 from admin.app import Session
 
-from scraping import parse_news_list
+from scraping.tasks.parse_news_list import parse_news_list_task
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +20,13 @@ def fetch_site_parser_ids():
 
 
 @celery.task(queue='test')
-def run_site_parsers():
+def run_site_parsers_task():
     try:
         site_parser_ids = fetch_site_parser_ids()
     except SQLAlchemyError:
         return dict(result='FAILURE', comment="Fetching active site parsers failed")
 
     for site_parser_id in site_parser_ids:
-        parse_news_list.delay(site_parser_id)
+        pass
+        parse_news_list_task.delay(site_parser_id)
     return dict(result='SUCCESS', comment="Added tasks for starting {} site parsers".format(len(site_parser_ids)))
