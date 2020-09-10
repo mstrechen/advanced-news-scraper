@@ -68,6 +68,10 @@ def parse_news_list_task(site_parser_id):
     pass
     logger.info("Parsing news list for site parser {}".format(site_parser_id))
     site_parser = fetch_site_parser_by_id(site_parser_id)
+
+    if site_parser.type != 'dynamic':
+        return dict(result='FAILURE', comment="Only dynamic news_list parsers are supported")
+
     if not site_parser.has_newslist_parser:
         return dict(result='SUCCESS', comment="Nothing to parse with site parser {}".format(site_parser_id))
 
