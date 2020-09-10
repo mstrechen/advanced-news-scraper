@@ -29,6 +29,8 @@ def parse_config(site_parser):
     else:
         raise ValueError("Yaml parser configuration isn't supported yet")
 
+    lang = rules['lang']
+
     list_rules = rules['list']
     list_url = list_rules['url']
 
@@ -40,15 +42,25 @@ def parse_config(site_parser):
 
     article_rules = rules['article']
 
-    return list_url, item_xpath, item_link_subpath, next_xpath, article_rules
+    return lang, list_url, item_xpath, item_link_subpath, next_xpath, article_rules
 
 
-def does_article_exist(link):
+def article_exists(link):
     session = Session()
-    article_exists = session.query(Article).filter_by(url=link).count() > 0
+    does_article_exist = session.query(Article).filter_by(url=link).count() > 0
     session.close()
 
-    return article_exists
+    return does_article_exist
+
+
+def insert_article(site_id, lang, url):
+    session = Session()
+    logger.info('Adding article to database {}'.format(url))
+    article = Article(site_id=site_id, language=lang, url=url)
+    session.add(article)
+    session.commit()
+    session.flush()
+    session.close()
 
 
 @celery.task(queue='test')
@@ -60,7 +72,7 @@ def parse_news_list_task(site_parser_id):
         return dict(result='SUCCESS', comment="Nothing to parse with site parser {}".format(site_parser_id))
 
     try:
-        list_url, item_xpath, item_link_subpath, next_xpath, article_rules = parse_config(site_parser)
+        lang, list_url, item_xpath, item_link_subpath, next_xpath, article_rules = parse_config(site_parser)
     except ValueError:
         return dict(result='FAILURE', comment="Error have occurred during parsing rules for site parser {}"
                     .format(site_parser_id))
@@ -71,7 +83,6 @@ def parse_news_list_task(site_parser_id):
 
     next_url = list_url
     fetched_articles = 0
-    reached_parsed_article = False
     has_next_page = True
     while fetched_articles < limit and has_next_page:
         try:
@@ -96,15 +107,15 @@ def parse_news_list_task(site_parser_id):
                 logger.info("Failed to extract article link from news list item")
                 continue
 
-            reached_parsed_article |= does_article_exist(link)
-            if reached_parsed_article:
-                break
-
-            parse_article_task.delay(link, article_rules)
+            if not article_exists(link):
+                # Inserting article into database here, so we won't create another task for parsing same article
+                insert_article(site_parser.site_id, lang, link)
+                parse_article_task.delay(link, article_rules)
 
             fetched_articles += 1
             if fetched_articles == limit:
                 break
 
-        if reached_parsed_article or fetched_articles == limit:
+        if fetched_articles == limit:
             break
+        return dict(result='SUCCESS', comment="Successfully parsed news list with site parser {}".format(site_parser_id))
