@@ -12,6 +12,9 @@ help:
 dev: stop-web-celery
 	docker-compose up -d
 
+test:
+	MODE=TEST docker-compose up migrate
+
 build: rebuild
 rebuild:
 	docker-compose build
