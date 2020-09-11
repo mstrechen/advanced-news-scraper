@@ -61,9 +61,11 @@ def insert_article(site_id, lang, url):
     session.add(article)
     session.commit()
     session.flush()
+
+    article_id = article.article_id
     session.close()
 
-    return article.article_id
+    return article_id
 
 
 @celery.task(queue='test')
