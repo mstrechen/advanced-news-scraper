@@ -54,13 +54,16 @@ def article_exists(link):
 
 
 def insert_article(site_id, lang, url):
-    session = Session()
     logger.info('Adding article to database {}'.format(url))
+
+    session = Session()
     article = Article(site_id=site_id, language=lang, url=url)
     session.add(article)
     session.commit()
     session.flush()
     session.close()
+
+    return article.article_id
 
 
 @celery.task(queue='test')
@@ -113,8 +116,8 @@ def parse_news_list_task(site_parser_id):
 
             if not article_exists(link):
                 # Inserting article into database here, so we won't create another task for parsing same article
-                insert_article(site_parser.site_id, lang, link)
-                parse_article_task.delay(link, article_rules)
+                article_id = insert_article(site_parser.site_id, lang, link)
+                parse_article_task.delay(link, article_rules, article_id, site_parser_id)
 
             fetched_articles += 1
             if fetched_articles == limit:
@@ -122,4 +125,5 @@ def parse_news_list_task(site_parser_id):
 
         if fetched_articles == limit:
             break
-        return dict(result='SUCCESS', comment="Successfully parsed news list with site parser {}".format(site_parser_id))
+
+    return dict(result='SUCCESS', comment="Successfully parsed news list with site parser {}".format(site_parser_id))
