@@ -9,6 +9,8 @@ MODELS = [ArticleTextEs, ]
 
 
 def init_es(app: Flask):
+    if app.config['MODE'] == 'TEST':
+        return
     conn = connections.create_connection(hosts=app.config['ELASTICSEARCH_HOSTS'], timeout=20)
     for _ in range(10 * 60 // 5):  # timeout of 60 seconds
         if conn.ping():

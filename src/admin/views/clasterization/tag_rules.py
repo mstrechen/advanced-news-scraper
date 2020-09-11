@@ -1,5 +1,3 @@
-import json
-
 from flask_security import current_user
 from flask_wtf import Form
 from wtforms import ValidationError, HiddenField
@@ -7,41 +5,15 @@ import wtforms.validators as validators
 
 from admin.models.tag_rules import TagRule
 from admin.utils.views import PatchedModelView
+from clasterization.query_translator import QueryDecodeError, QueryTranslator
 
 
-class RuleQueryValidator:
-    @classmethod
-    def validate_rule(cls, rule):
-        if type(rule) is str:
-            return
-        if type(rule) is list:
-            for child_rule in rule:
-                cls.validate_rule(child_rule)
-        elif type(rule) is dict:
-            if 'keywords' in rule:
-                if type(rule['keywords']) is not list:
-                    raise ValueError("Keywords should be a list")
-                for keyword in rule['keywords']:
-                    cls.validate_rule(keyword)
-                if type(rule.get('min_count', 1)) is not int:
-                    raise ValueError("min_count should be an int")
-            else:
-                if 'synonyms' not in rule:
-                    raise ValueError('Missing "synonyms" or "keywords" field')
-                cls.validate_rule(rule['synonyms'])
-                if 'antonyms' in rule:
-                    cls.validate_rule(rule['antonyms'])
-        else:
-            raise ValueError("Unexpected rule type: ", type(rule))
-
-    @classmethod
-    def validator(cls, form, field):
-        try:
-            rule = field.data
-            rule = json.loads(rule)
-            cls.validate_rule(rule)
-        except Exception as e:
-            raise ValidationError(*e.args)
+def rule_query_validator(form, field):
+    try:
+        # TODO: make separate validator
+        QueryTranslator(field.data).translate().to_dict()
+    except QueryDecodeError as e:
+        raise ValidationError(' '.join(map(str, e.args))) from e
 
 
 class TagRulesView(PatchedModelView):
@@ -56,7 +28,7 @@ class TagRulesView(PatchedModelView):
     column_filters = ['rule_type']
 
     form_args = {
-        'rule_query': dict(validators=[RuleQueryValidator.validator]),
+        'rule_query': dict(validators=[rule_query_validator]),
         'enabled_timestamp': dict(validators=[validators.optional()]),
         'disabled_timestamp': dict(validators=[validators.optional()]),
     }

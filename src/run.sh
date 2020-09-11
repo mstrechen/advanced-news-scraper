@@ -29,6 +29,9 @@ elif [ "$MODE" == "GENERATE_TRANSLATIONS" ]; then
 elif [ "$MODE" == "COMPILE_TRANSLATIONS" ]; then
   cd admin || exit
   pipenv run pybabel compile -d translations
+elif [ "$MODE" == "TEST" ]; then
+  export FLASK_APP=admin/app
+  pipenv run pytest .
 else
   echo "Unknown MODE=$MODE" && exit 1
 fi
