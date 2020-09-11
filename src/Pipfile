@@ -29,6 +29,8 @@ python-logstash = "*"
 selenium = "*"
 PyVirtualDisplay = "*"
 elasticsearch-dsl = "==7"
+lxml = "*"
+bs4 = "*"
 
 [requires]
 python_version = "3.7"
