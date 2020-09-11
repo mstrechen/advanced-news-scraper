@@ -1,5 +1,3 @@
-import json
-
 from flask_security import current_user
 from flask_wtf import Form
 from wtforms import ValidationError, HiddenField
