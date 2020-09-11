@@ -22,9 +22,10 @@ def insert_article_text(parser_id, article_id, title, text):
     session.add(article_text)
     session.commit()
     session.flush()
+    article_text_id = article_text.text_id
     session.close()
 
-    return article_text.text_id
+    return article_text_id
 
 
 def update_article(article_id, article_text_id):
