@@ -77,8 +77,8 @@ def parse_article_task(link, article_rules, article_id, site_parser_id):
     except WebDriverException:
         return dict(result='FAILURE', comment="Failed to get elements of article {}".format(link))
 
-    text = get_pure_text(elem_to_str(element_text))
-    title = get_pure_text(element_title)
+    text = get_pure_text(element_text.get_attribute("outerHTML"))
+    title = get_pure_text(element_title.get_attribute("outerHTML"))
 
-    article_text_id = insert_article_text(site_parser_id, article_id, text, title)
+    article_text_id = insert_article_text(site_parser_id, article_id, title, text)
     update_article(article_id, article_text_id)
