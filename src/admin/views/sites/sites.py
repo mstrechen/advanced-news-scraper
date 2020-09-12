@@ -1,10 +1,10 @@
 import requests
 
 from wtforms import ValidationError
-import wtforms.validators as validators
 
 from admin.models.sites import Site
 from admin.utils.views import PatchedModelView
+
 
 class UrlAvailabilityValidator:
     @classmethod
@@ -13,7 +13,7 @@ class UrlAvailabilityValidator:
             url = field.data
             resp = requests.head(url)
             resp.raise_for_status()
-        except Exception as e:
+        except Exception:
             raise ValidationError("Provided invalid or inaccessible URL")
 
 class SitesView(PatchedModelView):
