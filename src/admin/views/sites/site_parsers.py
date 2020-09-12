@@ -23,8 +23,8 @@ class SiteParsersView(PatchedModelView):
             # ('yaml', 'yaml'),
         ],
         'type': [
-            # ('dynamic', 'dynamic'),
-            ('static', 'static'),
+            ('dynamic', 'dynamic'),
+            # ('static', 'static'),
             # ('rest_api', 'rest_api'),
         ],
     }
