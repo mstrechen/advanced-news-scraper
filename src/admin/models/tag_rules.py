@@ -4,6 +4,7 @@ from admin.app import db
 from admin.models.tag_rules_es import TagRuleEs
 from clasterization.query_translator import QueryTranslator
 
+
 class RuleTypes:
     ES_QUERY = 'es_query'
     KEYWORD_LIST = 'keyword_list'
