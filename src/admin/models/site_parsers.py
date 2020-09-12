@@ -16,3 +16,6 @@ class SiteParser(db.Model):
     created = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.now())
     comment = db.Column(db.TEXT, nullable=False, default='')
     rules = db.Column(db.TEXT, nullable=False)
+    active = db.Column(db.BOOLEAN, nullable=False)
+
+    site = db.relationship('Site', remote_side=[site_id], backref='parsers')
