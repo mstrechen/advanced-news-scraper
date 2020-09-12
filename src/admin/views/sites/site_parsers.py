@@ -1,4 +1,5 @@
 from flask_wtf import Form
+from flask_security import current_user
 from wtforms import HiddenField
 
 from admin.models.site_parsers import SiteParser
