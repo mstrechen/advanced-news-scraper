@@ -1,4 +1,8 @@
+from sqlalchemy import event
+
 from admin.app import db
+from admin.models.tag_rules_es import TagRuleEs
+from clasterization.query_translator import QueryTranslator
 
 
 class RuleTypes:
@@ -22,3 +26,14 @@ class TagRule(db.Model):
 
     tag = db.relationship('Tag', remote_side=[tag_id], backref='rules', )
     creator = db.relationship('User', remote_side=[creator_id])
+
+
+@event.listens_for(TagRule, 'after_insert')
+@event.listens_for(TagRule, 'after_update')
+def article_on_create_or_update(mapper, connection, tag_rule: TagRule):
+    es_entity = TagRuleEs(
+        meta={'id': tag_rule.rule_id},
+        tag_id=tag_rule.tag_id,
+        query=QueryTranslator(tag_rule.rule_query).translate()
+    )
+    es_entity.save()

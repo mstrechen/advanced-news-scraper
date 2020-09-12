@@ -1,0 +1,39 @@
+{% macro debug_script() %}
+    <script type="text/javascript">
+        function debugRules(){
+            let rules = $('#rule_query').val();
+            $.post({
+                url: 'debug',
+                data: rules,
+                success: data => {
+                    let html = "";
+                    if(data['hits'].length === 0){
+                        html = `<div class="alert alert-info">{{ gettext("No articles found for this rule") }}</div>`;
+                    } else {
+                        html +=
+                            '<table class="table">' +
+                            '<tr>' +
+                            '<th>id</th>' +
+                            '<th>title</th>' +
+                            '</tr>';
+                        html += data['hits'].map(
+                            article => `
+<tr>
+    <td><a href=/article/details/?id=${article.id}>${article.id}</a></td>
+    <td>${article.title}</td>
+</tr>`
+                        ).join('\n');
+                        html += '</table>';
+                    }
+                    $('#debug_info').html(html)
+                },
+            }).fail(
+                (resp) => $('#debug_info').html(`<div class="alert alert-danger">${resp.responseJSON.safe_error}</div>`)
+            )
+        }
+    </script>
+{% endmacro %}
+{% macro debug_info_block() %}
+    <div id="debug_info">
+    </div>
+{% endmacro %}
