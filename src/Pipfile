@@ -30,6 +30,8 @@ selenium = "*"
 PyVirtualDisplay = "*"
 elasticsearch-dsl = "==7"
 pytest = "*"
+lxml = "*"
+bs4 = "*"
 
 [requires]
 python_version = "3.7"

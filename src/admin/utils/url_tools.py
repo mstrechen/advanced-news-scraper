@@ -4,7 +4,6 @@ from werkzeug.datastructures import MultiDict
 
 def update_get_args(url, **params):
     url_parsed = urlparse(url)
-    print()
     query_dict = MultiDict(parse_qsl(url_parsed.query))
     query_dict.update(params)
 
