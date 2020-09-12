@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from admin import celery
 from admin.models.sites import Site
-from admin.app import Session
+from admin.app import db, app
 
 from scraping.tasks.parse_news_list import parse_news_list_task
 
@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_site_parser_ids():
-    session = Session()
-    site_parser_ids = session.query(Site.active_parser_id).all()
-    session.close()
+    with app.app_context():
+        site_parser_ids = db.session.query(Site.active_parser_id).all()
 
     return site_parser_ids
 
