@@ -41,6 +41,6 @@ class SiteParsersView(PatchedModelView):
 
     def create_model(self, form: Form):
         form.has_newslist_parser.data = True
-        form.has_article_parser = True
+        form.has_article_parser.data = True
         form.creator_id.data = current_user.id
         return super(SiteParsersView, self).create_model(form)
