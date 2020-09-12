@@ -3,7 +3,7 @@ from selenium.common.exceptions import WebDriverException
 from admin import celery
 from admin.models.site_parsers import SiteParser
 from admin.models.articles import Article
-from admin.app import Session
+from admin.app import app, db
 
 from scraping import get_driver
 from scraping.tasks.parse_article import parse_article_task
@@ -16,10 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_site_parser_by_id(site_parser_id):
-    session = Session()
-    site_parser = session.query(SiteParser).filter_by(parser_id=site_parser_id)[0]
-    session.close()
-
+    with app.app_context():
+        site_parser = db.session.query(SiteParser).filter_by(parser_id=site_parser_id)[0]
     return site_parser
 
 
@@ -46,9 +44,8 @@ def parse_config(site_parser):
 
 
 def article_exists(link):
-    session = Session()
-    does_article_exist = session.query(Article).filter_by(url=link).count() > 0
-    session.close()
+    with app.app_context():
+        does_article_exist = db.session.query(Article).filter_by(url=link).count() > 0
 
     return does_article_exist
 
@@ -56,14 +53,11 @@ def article_exists(link):
 def insert_article(site_id, lang, url):
     logger.info('Adding article to database {}'.format(url))
 
-    session = Session()
-    article = Article(site_id=site_id, language=lang, url=url)
-    session.add(article)
-    session.commit()
-    session.flush()
-
-    article_id = article.article_id
-    session.close()
+    with app.app_context():
+        article = Article(site_id=site_id, language=lang, url=url)
+        db.session.add(article)
+        db.session.commit()
+        article_id = article.article_id
 
     return article_id
 

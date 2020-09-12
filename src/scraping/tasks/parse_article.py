@@ -3,8 +3,8 @@ from selenium.common.exceptions import WebDriverException
 from admin import celery
 import logging
 
-from admin.app import Session
-from admin.models.articles import Article, ArticleText
+from admin.app import app, db
+from admin.models.articles import ArticleText
 from scraping import get_driver
 
 from lxml import etree
@@ -15,26 +15,12 @@ logger = logging.getLogger(__name__)
 
 def insert_article_text(parser_id, article_id, title, text):
     logger.info('Adding article text to database {}'.format(title))
-    session = Session()
-    hash_text = hash(text)
-    article_text = ArticleText(parser_id=parser_id, article_id=article_id,
-                               title=title, content=text, hash=hash_text)
-    session.add(article_text)
-    session.commit()
-    session.flush()
-    article_text_id = article_text.text_id
-    session.close()
-
-    return article_text_id
-
-
-def update_article(article_id, article_text_id):
-    session = Session()
-    article = session.query(Article).filter(Article.article_id==article_id).one()
-    article.last_text_id = article_text_id
-    session.commit()
-    session.flush()
-    session.close()
+    with app.app_context():
+        hash_text = hash(text)
+        article_text = ArticleText(parser_id=parser_id, article_id=article_id,
+                                   title=title, content=text, hash=hash_text)
+        db.session.add(article_text)
+        db.session.commit()
 
 
 def parse_config(article_rules):
@@ -80,5 +66,5 @@ def parse_article_task(link, article_rules, article_id, site_parser_id):
     text = get_pure_text(element_text.get_attribute("outerHTML"))
     title = get_pure_text(element_title.get_attribute("outerHTML"))
 
-    article_text_id = insert_article_text(site_parser_id, article_id, title, text)
-    update_article(article_id, article_text_id)
+    insert_article_text(site_parser_id, article_id, title, text)
+    return dict(result='SUCCESS', comment="Successfully parsed article {}".format(link))
