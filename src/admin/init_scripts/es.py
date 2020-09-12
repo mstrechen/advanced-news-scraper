@@ -3,9 +3,10 @@ from time import sleep
 from elasticsearch_dsl import connections
 from flask import Flask
 from admin.models.articles_es import ArticleTextEs
+from admin.models.tag_rules_es import TagRuleEs
 
 
-MODELS = [ArticleTextEs, ]
+MODELS = [ArticleTextEs, TagRuleEs, ]
 
 
 def init_es(app: Flask):
