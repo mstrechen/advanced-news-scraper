@@ -79,5 +79,4 @@ class TagRulesView(PatchedModelView):
         except QueryDecodeError as e:
             error = ' '.join(map(str, e.args))
             safe_error = escape(error)
-            print(safe_error, flush=True)
             return jsonify(error=error, safe_error=safe_error), 400

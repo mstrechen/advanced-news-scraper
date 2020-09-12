@@ -136,7 +136,6 @@ from clasterization.query_translator import QueryDecodeError, QueryTranslator
     ]
 )
 def test_positive(query, expected):
-    print(json.dumps(QueryTranslator(query).translate().to_dict(), ensure_ascii=False), flush=True)
     assert QueryTranslator(query).translate().to_dict() == expected
 
 
