@@ -44,7 +44,8 @@ def get_pure_text(text):
 @celery.task(queue='test')
 def parse_article_task(link, article_rules, article_id, site_parser_id):
     if article_rules is None:
-        return dict(result='FAILURE', comment="Failed to parse page {}, parsing rules for article aren't specified".format(link))
+        return dict(result='FAILURE', comment="Failed to parse page {}, parsing rules for article aren't specified"
+                    .format(link))
 
     logger.info("Parsing article by link {}".format(link))
 

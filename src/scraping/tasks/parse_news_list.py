@@ -89,9 +89,9 @@ def parse_news_list_task(site_parser_id):
     has_next_page = True
     while fetched_articles < limit and has_next_page:
         try:
-            page = driver.get(next_url)
+            driver.get(next_url)
         except WebDriverException:
-            return dict(result='FAILURE', comment="Failed to get ".format(next_url))
+            return dict(result='FAILURE', comment="Failed to get {}".format(next_url))
 
         try:
             next_url = driver.find_element_by_xpath(next_xpath).get_attribute("href")
