@@ -7,13 +7,12 @@ from admin.app import app, db
 from admin.models.articles import ArticleText
 from scraping import get_driver
 
-from lxml import etree
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 
 
-def insert_article_text(parser_id, article_id, title, text):
+def save_article_text(parser_id, article_id, title, text):
     logger.info('Adding article text to database {}'.format(title))
     with app.app_context():
         hash_text = hash(text)
@@ -30,18 +29,11 @@ def parse_config(article_rules):
     return text_xpath, title_xpath
 
 
-def elem_to_str(elem):
-    res = etree.tostring(elem, encoding='utf-8').decode('utf-8')
-    for e in elem:
-        res += etree.tostring(e, encoding='utf-8').decode('utf-8')
-    return res.strip()
-
-
 def get_pure_text(text):
     return BeautifulSoup(text, "lxml").text
 
 
-@celery.task(queue='test')
+@celery.task(queue='articles')
 def parse_article_task(link, article_rules, article_id, site_parser_id):
     if article_rules is None:
         return dict(result='FAILURE', comment="Failed to parse page {}, parsing rules for article aren't specified"
@@ -67,5 +59,5 @@ def parse_article_task(link, article_rules, article_id, site_parser_id):
     text = get_pure_text(element_text.get_attribute("outerHTML"))
     title = get_pure_text(element_title.get_attribute("outerHTML"))
 
-    insert_article_text(site_parser_id, article_id, title, text)
+    save_article_text(site_parser_id, article_id, title, text)
     return dict(result='SUCCESS', comment="Successfully parsed article {}".format(link))

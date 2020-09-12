@@ -18,7 +18,7 @@ def fetch_site_parser_ids():
     return site_parser_ids
 
 
-@celery.task(queue='test')
+@celery.task(queue='site_parsers')
 def run_site_parsers_task():
     try:
         site_parser_ids = fetch_site_parser_ids()
@@ -26,6 +26,5 @@ def run_site_parsers_task():
         return dict(result='FAILURE', comment="Fetching active site parsers failed")
 
     for site_parser_id in site_parser_ids:
-        pass
         parse_news_list_task.delay(site_parser_id)
     return dict(result='SUCCESS', comment="Added tasks for starting {} site parsers".format(len(site_parser_ids)))

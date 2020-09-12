@@ -11,8 +11,11 @@ from selenium.webdriver.common.by import By
 
 import json
 import logging
+import collections
 
 logger = logging.getLogger(__name__)
+
+Config = collections.namedtuple('Config', 'lang list_url item_xpath item_link_subpath next_xpath article_rules')
 
 
 def fetch_site_parser_by_id(site_parser_id):
@@ -40,7 +43,7 @@ def parse_config(site_parser):
 
     article_rules = rules['article']
 
-    return lang, list_url, item_xpath, item_link_subpath, next_xpath, article_rules
+    return Config(lang, list_url, item_xpath, item_link_subpath, next_xpath, article_rules)
 
 
 def article_exists(link):
@@ -50,7 +53,7 @@ def article_exists(link):
     return does_article_exist
 
 
-def insert_article(site_id, lang, url):
+def save_article(site_id, lang, url):
     logger.info('Adding article to database {}'.format(url))
 
     with app.app_context():
@@ -62,7 +65,7 @@ def insert_article(site_id, lang, url):
     return article_id
 
 
-@celery.task(queue='test')
+@celery.task(queue='news_lists')
 def parse_news_list_task(site_parser_id):
     pass
     logger.info("Parsing news list for site parser {}".format(site_parser_id))
@@ -75,7 +78,7 @@ def parse_news_list_task(site_parser_id):
         return dict(result='SUCCESS', comment="Nothing to parse with site parser {}".format(site_parser_id))
 
     try:
-        lang, list_url, item_xpath, item_link_subpath, next_xpath, article_rules = parse_config(site_parser)
+        config = parse_config(site_parser)
     except ValueError:
         return dict(result='FAILURE', comment="Error have occurred during parsing rules for site parser {}"
                     .format(site_parser_id))
@@ -84,7 +87,7 @@ def parse_news_list_task(site_parser_id):
 
     limit = 10
 
-    next_url = list_url
+    next_url = config.list_url
     fetched_articles = 0
     has_next_page = True
     while fetched_articles < limit and has_next_page:
@@ -94,26 +97,26 @@ def parse_news_list_task(site_parser_id):
             return dict(result='FAILURE', comment="Failed to get {}".format(next_url))
 
         try:
-            next_url = driver.find_element_by_xpath(next_xpath).get_attribute("href")
+            next_url = driver.find_element_by_xpath(config.next_xpath).get_attribute("href")
         except WebDriverException:
             has_next_page = False
 
         try:
-            news_items = driver.find_elements_by_xpath(item_xpath)
+            news_items = driver.find_elements_by_xpath(config.item_xpath)
         except WebDriverException:
             return dict(result='FAILURE', comment="Failed to get news items")
 
         for item in news_items:
             try:
-                link = item.find_element(By.XPATH, ".//" + item_link_subpath).get_attribute("href")
+                link = item.find_element(By.XPATH, ".//" + config.item_link_subpath).get_attribute("href")
             except WebDriverException:
                 logger.info("Failed to extract article link from news list item")
                 continue
 
             if not article_exists(link):
-                # Inserting article into database here, so we won't create another task for parsing same article
-                article_id = insert_article(site_parser.site_id, lang, link)
-                parse_article_task.delay(link, article_rules, article_id, site_parser_id)
+                # Saving article into database here, so we won't create another task for parsing same article
+                article_id = save_article(site_parser.site_id, config.lang, link)
+                parse_article_task.delay(link, config.article_rules, article_id, site_parser_id)
 
             fetched_articles += 1
             if fetched_articles == limit:
