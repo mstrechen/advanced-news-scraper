@@ -56,18 +56,23 @@ def parser_rules_validator(form, field):
             # consider having global var with languages
             if rule_lang not in ['uk', 'ru', 'en']:
                 raise ValueError("lang", "be one of uk, ru, en")
-            list = rules.get('list')
+            list_rules = rules.get('list')
 
-            if list is not None:
-                url = list.get('url')
+            if list_rules is not None:
+                if not isinstance(list_rules, dict):
+                    raise ValueError('list', 'be a JSON object')
+
+                url = list_rules.get('url')
                 if url is None:
                     raise KeyError('url', 'list')
                 if not url.startswith(form_base_url):
                     raise ValueError('url', 'start with url of chosen site')
 
-                item = list.get('item')
+                item = list_rules.get('item')
                 if item is None:
                     raise KeyError('item', 'list')
+                if not isinstance(item, dict):
+                    raise ValueError('list.item', 'be a JSON object')
 
                 xpath = item.get('xpath')
                 if xpath is None:
@@ -81,14 +86,16 @@ def parser_rules_validator(form, field):
                 if not _is_valid_xpath(link_subpath):
                     raise ValueError('list.item.link_subpath', 'be a valid XPath')
 
-                next = list.get('next')
+                next = list_rules.get('next')
                 if next is None:
                     raise KeyError('next', 'list')
                 if not _is_valid_xpath(next):
                     raise ValueError('list.next', 'be a valid XPath')
 
-            article = rules.get('articles')
-            if rules.get('article') is not None:
+            article = rules.get('article')
+            if article is not None:
+                if not isinstance(article, dict):
+                    raise ValueError('article', 'be a JSON object')
                 text_xpath = article.get('text_xpath')
                 if text_xpath is None:
                     raise KeyError('text_xpath', 'article')
