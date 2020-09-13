@@ -14,8 +14,9 @@ def _is_valid_xpath(xpath):
     try:
         fake_tree.xpath(xpath)
         return True
-    except:
+    except Exception:
         return False
+
 
 def check_has_newslist_parser(form):
     if form.syntax.data == 'json':
@@ -28,6 +29,7 @@ def check_has_newslist_parser(form):
     else:
         return True
 
+
 def check_has_article_parser(form):
     if form.syntax.data == 'json':
         try:
@@ -38,6 +40,7 @@ def check_has_article_parser(form):
             return False
     else:
         return True
+
 
 def parser_rules_validator(form, field):
     try:
