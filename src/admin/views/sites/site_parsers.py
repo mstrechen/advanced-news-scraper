@@ -1,12 +1,16 @@
 import json
 
 from lxml import etree
+from flask import jsonify, request
 from flask_wtf import Form
 from flask_security import current_user
+from flask_admin import expose
 from wtforms import HiddenField, ValidationError
 
 from admin.models.site_parsers import SiteParser
 from admin.utils.views import PatchedModelView
+
+from scraping.tasks.parse_news_list import parse_news_list_dry_run
 
 
 def _is_valid_xpath(xpath):
@@ -164,3 +168,10 @@ class SiteParsersView(PatchedModelView):
         form.has_article_parser.data = check_has_article_parser(form)
         form.creator_id.data = current_user.id
         return super(SiteParsersView, self).create_model(form)
+
+    @expose('/edit/debug', methods=('POST', ))
+    @expose('/new/debug', methods=('POST', ))
+    def debug_view(self):
+        data = request.get_data()
+        result = parse_news_list_dry_run(data['rules'])
+        return jsonify(result)
