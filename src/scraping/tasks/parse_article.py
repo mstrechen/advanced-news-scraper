@@ -1,9 +1,8 @@
 from selenium.common.exceptions import WebDriverException
 
-from admin import celery
 import logging
 
-from admin.app import app, db
+from admin.app import app, db, celery
 from admin.models.articles import ArticleText
 from scraping import get_driver
 
