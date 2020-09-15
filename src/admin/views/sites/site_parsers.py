@@ -129,6 +129,9 @@ def parser_rules_validator(form, field):
 class SiteParsersView(PatchedModelView):
     CONFIG_MODEL = SiteParser
 
+    edit_template = 'scraping/site_parsers.edit.html'
+    create_template = 'scraping/site_parsers.new.html'
+
     can_view_details = True
 
     column_editable_list = []
@@ -173,5 +176,8 @@ class SiteParsersView(PatchedModelView):
     @expose('/new/debug', methods=('POST', ))
     def debug_view(self):
         data = request.get_data()
-        result = parse_news_list_dry_run(data['rules'])
-        return jsonify(result)
+        result = parse_news_list_dry_run(data)
+        if result['result'] == 'SUCCESS':
+            return jsonify(ok=result['comment'], fetched_articles=result['fetched_articles'])
+        else:
+            return jsonify(error="", safe_error=result['comment'], fetched_articles=result['fetched_articles'])
