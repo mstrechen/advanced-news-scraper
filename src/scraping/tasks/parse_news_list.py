@@ -23,9 +23,9 @@ def fetch_site_parser_by_id(site_parser_id):
     return site_parser
 
 
-def parse_config(site_parser):
-    if site_parser.syntax == "json":
-        rules = json.loads(site_parser.rules)
+def parse_config(rules_str, syntax):
+    if syntax == "json":
+        rules = json.loads(rules_str)
     else:
         raise ValueError("Yaml parser configuration isn't supported yet")
 
@@ -114,7 +114,8 @@ def fetch_and_process_articles(config, site_parser, dry_run):
                 fetched_articles=fetched_articles)
 
 
-def parse_news_list_dry_run(config):
+def parse_news_list_dry_run(config_str):
+    config = parse_config(config_str, "json")
     return fetch_and_process_articles(config, None, True)
 
 
@@ -130,7 +131,7 @@ def parse_news_list_task(site_parser_id):
         return dict(result='SUCCESS', comment="Nothing to parse with site parser {}".format(site_parser_id))
 
     try:
-        config = parse_config(site_parser)
+        config = parse_config(site_parser.rules, site_parser.syntax)
     except ValueError:
         return dict(result='FAILURE', comment="Error have occurred during parsing rules for site parser {}"
                     .format(site_parser_id))
