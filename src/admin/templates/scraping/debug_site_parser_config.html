@@ -1,0 +1,37 @@
+{% macro debug_script() %}
+    <script type="text/javascript">
+        function debugParseNewsList(){
+            let rules = $('#rules').val();
+            $.post({
+                url: 'debug',
+                data: rules,
+                success: data => {
+                    let html = "";
+                    if(data['fetched_articles'].length === 0){
+                        html = `<div class="alert alert-info">{{ gettext("No articles were found in the news list") }}</div>`;
+                    } else {
+                        html +=
+                            '<table class="table">' +
+                            '<tr>' +
+                            '<th>Link</th>' +
+                            '</tr>';
+                        html += data['fetched_articles'].map(
+                            article => `
+<tr>
+    <td>${article}</td>
+</tr>`
+                        ).join('\n');
+                        html += '</table>';
+                    }
+                    $('#debug_info').html(html)
+                },
+            }).fail(
+                (resp) => $('#debug_info').html(`<div class="alert alert-danger">${resp.responseJSON.safe_error}</div>`)
+            )
+        }
+    </script>
+{% endmacro %}
+{% macro debug_info_block() %}
+    <div id="debug_info">
+    </div>
+{% endmacro %}

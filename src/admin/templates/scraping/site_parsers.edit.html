@@ -1,0 +1,14 @@
+{% extends 'admin/model/edit.html' %}
+{% import 'admin/lib.html' as lib with context %}
+{% import 'scraping/debug_site_parser_config.html' as debug %}
+
+{% macro render_debug_button() %}
+    <input type="button" class="btn btn-info" onclick="debugParseNewsList()" value="{{ gettext("Debug") }}">
+{% endmacro %}
+
+{% block edit_form %}
+    {{ debug.debug_script() }}
+    {% set extra_buttons = extra() + render_debug_button() %}
+    {{ lib.render_form(form, return_url, extra_buttons, form_opts) }}
+    {{ debug.debug_info_block() }}
+{% endblock %}
