@@ -1,12 +1,17 @@
 import json
 
 from lxml import etree
+from flask import jsonify, request
 from flask_wtf import Form
 from flask_security import current_user
+from flask_admin import expose
 from wtforms import HiddenField, ValidationError
 
 from admin.models.site_parsers import SiteParser
 from admin.utils.views import PatchedModelView
+
+from scraping.tasks.parse_news_list import parse_news_list_dry_run
+from scraping.tasks.parse_article import parse_article_dry_run
 
 
 def _is_valid_xpath(xpath):
@@ -125,6 +130,9 @@ def parser_rules_validator(form, field):
 class SiteParsersView(PatchedModelView):
     CONFIG_MODEL = SiteParser
 
+    edit_template = 'scraping/site_parsers.edit.html'
+    create_template = 'scraping/site_parsers.new.html'
+
     can_view_details = True
 
     column_editable_list = []
@@ -164,3 +172,23 @@ class SiteParsersView(PatchedModelView):
         form.has_article_parser.data = check_has_article_parser(form)
         form.creator_id.data = current_user.id
         return super(SiteParsersView, self).create_model(form)
+
+    @expose('/edit/debug', methods=('POST', ))
+    @expose('/new/debug', methods=('POST', ))
+    def debug_view(self):
+        data = request.get_data()
+        result = parse_news_list_dry_run(data)
+        if result['result'] == 'SUCCESS':
+            return jsonify(ok=result['comment'], fetched_articles=result['fetched_articles'])
+        else:
+            return jsonify(error="", safe_error=result['comment'], fetched_articles=result['fetched_articles'])
+
+    @expose('/edit/debug_article', methods=('POST', ))
+    @expose('/new/debug_article', methods=('POST', ))
+    def debug_article_view(self):
+        data = json.loads(request.get_data())
+        result = parse_article_dry_run(data["link"], data["rules"])
+        if result['result'] == 'SUCCESS':
+            return jsonify(ok=result['comment'], article=result['article']), 200
+        else:
+            return jsonify(error="", safe_error=result['comment']), 400
