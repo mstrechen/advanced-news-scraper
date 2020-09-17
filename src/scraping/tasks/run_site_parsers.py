@@ -2,9 +2,8 @@ import logging
 
 from sqlalchemy.exc import SQLAlchemyError
 
-from admin import celery
 from admin.models.site_parsers import SiteParser
-from admin.app import db, app
+from admin.app import db, app, celery
 
 from scraping.tasks.parse_news_list import parse_news_list_task
 
