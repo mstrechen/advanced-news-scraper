@@ -19,3 +19,13 @@ class ArticlesView(PatchedModelView):
         'text.content': lambda c, v, m, n: rec_getattr(m, n, '')[:300]
     }
     column_formatters_detail = {}
+
+    def get_query(self):
+        return super(ArticlesView, self) \
+            .get_query() \
+            .filter(Article.last_text_id.isnot(None))  # noqa
+
+    def get_count_query(self):
+        return super(ArticlesView, self) \
+            .get_count_query() \
+            .filter(Article.last_text_id.isnot(None))  # noqa
