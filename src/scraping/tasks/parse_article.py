@@ -54,13 +54,13 @@ def parse_article(link, article_rules, article_id, site_parser_id, dry_run):
     try:
         element_text = driver.find_element_by_xpath(text_xpath)
     except WebDriverException:
-        return dict(result='FAILURE', comment="Failed to get element text of article {} by xpath"
+        return dict(result='FAILURE', comment="Failed to get element text of article {} by xpath {}"
                     .format(link, text_xpath))
 
     try:
         element_title = driver.find_element_by_xpath(title_xpath)
     except WebDriverException:
-        return dict(result='FAILURE', comment="Failed to get element title of article {} by xpath"
+        return dict(result='FAILURE', comment="Failed to get element title of article {} by xpath {}"
                     .format(link, title_xpath))
 
     text = get_pure_text(element_text.get_attribute("outerHTML"))
