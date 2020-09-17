@@ -11,6 +11,7 @@ from admin.models.site_parsers import SiteParser
 from admin.utils.views import PatchedModelView
 
 from scraping.tasks.parse_news_list import parse_news_list_dry_run
+from scraping.tasks.parse_article import parse_article_dry_run
 
 
 def _is_valid_xpath(xpath):
@@ -181,3 +182,13 @@ class SiteParsersView(PatchedModelView):
             return jsonify(ok=result['comment'], fetched_articles=result['fetched_articles'])
         else:
             return jsonify(error="", safe_error=result['comment'], fetched_articles=result['fetched_articles'])
+
+    @expose('/edit/debug_article', methods=('POST', ))
+    @expose('/new/debug_article', methods=('POST', ))
+    def debug_article_view(self):
+        data = json.loads(request.get_data())
+        result = parse_article_dry_run(data["link"], data["rules"])
+        if result['result'] == 'SUCCESS':
+            return jsonify(ok=result['comment'], article=result['article']), 200
+        else:
+            return jsonify(error="", safe_error=result['comment']), 400

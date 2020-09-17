@@ -31,6 +31,37 @@
         }
     </script>
 {% endmacro %}
+
+{% macro debug_article_script() %}
+    <script type="text/javascript">
+        function debugParseArticles(){
+            let rules = $('#rules').val();
+            let debug_link = $('#debug_link').val();
+            let data = {rules, link:debug_link}
+            data = JSON.stringify(data)
+            console.log(data)
+            $.post({
+                url: 'debug_article',
+                data: data,
+                contentType:"application/json; charset=utf-8",
+                dataType: "json",
+                success: data => {
+                    let html = "";
+                    html += '<div>'
+                        + '<span class="label label-info"> {{ gettext("Title") }} </span>'
+                        + '<p>' + data['article']['title'] + '</p>'
+                        + '<span class="label label-info"> {{ gettext("Text") }} </span>'
+                        + '<p>' + data['article']['text'] + '</p>'
+                    $('#debug_info').html(html)
+                },
+            }).fail(
+                (resp) => $('#debug_info').html(`<div class="alert alert-danger">${resp.responseJSON.safe_error}</div>`)
+            )
+        }
+    </script>
+{% endmacro %}
+
+
 {% macro debug_info_block() %}
     <div id="debug_info">
     </div>
