@@ -73,7 +73,7 @@ def save_article(site_id, lang, url):
 def fetch_and_process_articles(config, site_parser, dry_run):
     driver = get_driver()
 
-    limit = 100
+    limit = 30
 
     next_url = config.list_url
     fetched_articles = []
