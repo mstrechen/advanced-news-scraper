@@ -48,7 +48,7 @@ ELASTICSEARCH_HOSTS = parse_list(os.environ.get('ELASTICSEARCH_HOSTS'), ['elasti
 CELERY_RESULT_BACKEND = \
     f'db+mysql://{MYSQL_DATABASE_USER}:{MYSQL_DATABASE_PASSWORD}' \
     f'@{MYSQL_DATABASE_HOST}:{MYSQL_DATABASE_PORT}/{MYSQL_DATABASE_DB}'
-CELERY_IMPORTS = ('admin.tasks', 'scraping.tasks',)
+CELERY_IMPORTS = ('admin.tasks', 'scraping.tasks', 'clasterization.tasks')
 
 CELERYBEAT_SCHEDULE = {
     'admin.tasks.test_tasks.ping_host': {
@@ -57,7 +57,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'scraping.tasks.run_site_parsers.run_site_parsers': {
         'task': 'scraping.tasks.run_site_parsers.run_site_parsers_task',
-        'schedule': crontab(minute='*/15')
+        'schedule': crontab(minute='*/3')
     }
 }
 

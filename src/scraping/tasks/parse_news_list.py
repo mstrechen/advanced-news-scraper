@@ -45,11 +45,17 @@ def parse_config(rules_str, syntax):
     return Config(lang, list_url, item_xpath, item_link_subpath, next_xpath, article_rules)
 
 
-def article_exists(link):
+def article_exists(link, filter_has_text=False):
     with app.app_context():
-        does_article_exist = db.session.query(Article).filter_by(url=link).count() > 0
+        query = db.session.query(Article).filter_by(url=link)
+        if filter_has_text:
+            query = query.filter(Article.last_text_id.isnot(None))
+        return query.count() > 0
 
-    return does_article_exist
+
+def get_article_by_url(link):
+    with app.app_context():
+        return Article.query.filter_by(url=link).first().article_id
 
 
 def save_article(site_id, lang, url):
@@ -67,7 +73,7 @@ def save_article(site_id, lang, url):
 def fetch_and_process_articles(config, site_parser, dry_run):
     driver = get_driver()
 
-    limit = 10
+    limit = 100
 
     next_url = config.list_url
     fetched_articles = []
@@ -76,6 +82,7 @@ def fetch_and_process_articles(config, site_parser, dry_run):
         try:
             driver.get(next_url)
         except WebDriverException:
+            logger.exception('Failed to get %s', next_url)
             return dict(result='FAILURE', comment="Failed to get {}".format(next_url))
 
         try:
@@ -86,13 +93,14 @@ def fetch_and_process_articles(config, site_parser, dry_run):
         try:
             news_items = driver.find_elements_by_xpath(config.item_xpath)
         except WebDriverException:
+            logger.exception('Failed to get news items')
             return dict(result='FAILURE', comment="Failed to get news items")
 
         for item in news_items:
             try:
                 link = item.find_element(By.XPATH, ".//" + config.item_link_subpath).get_attribute("href")
             except WebDriverException:
-                logger.info("Failed to extract article link from news list item")
+                logger.info("Failed to extract article link from news list item", exc_info=True)
                 continue
 
             fetched_articles.append(link)
@@ -102,9 +110,12 @@ def fetch_and_process_articles(config, site_parser, dry_run):
             if dry_run:
                 continue
 
-            if not article_exists(link):
+            if not article_exists(link, filter_has_text=True):
                 # Saving article into database here, so we won't create another task for parsing same article
-                article_id = save_article(site_parser.site_id, config.lang, link)
+                if article_exists(link, filter_has_text=False):
+                    article_id = get_article_by_url(link)
+                else:
+                    article_id = save_article(site_parser.site_id, config.lang, link)
                 parse_article_task.delay(link, config.article_rules, article_id, site_parser.parser_id)
 
         if len(fetched_articles) == limit:

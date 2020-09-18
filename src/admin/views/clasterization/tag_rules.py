@@ -15,7 +15,7 @@ from clasterization.query_translator import QueryDecodeError, QueryTranslator
 def rule_query_validator(form, field):
     try:
         # TODO: make separate validator
-        QueryTranslator(field.data).translate().to_dict()
+        QueryTranslator(field.data, form.rule_language.data).translate().to_dict()
     except QueryDecodeError as e:
         raise ValidationError(' '.join(map(str, e.args))) from e
 

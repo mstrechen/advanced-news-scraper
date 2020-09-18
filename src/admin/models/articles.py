@@ -20,6 +20,12 @@ class Article(db.Model):
         foreign_keys=[last_text_id]
     )
 
+    tags = db.relationship(
+        'Tag',
+        secondary='tag_to_article_text',
+        uselist=True,
+    )
+
 
 class ArticleText(db.Model):
     __tablename__ = 'article_texts'
@@ -40,7 +46,9 @@ tag_to_article_text = db.Table(
     db.Column('text_id', db.Integer(), db.ForeignKey(ArticleText.text_id)),
     db.Column('article_id', db.Integer(), db.ForeignKey(Article.article_id)),
     db.Column('rule_id', db.Integer(), db.ForeignKey('tag_rules.rule_id'), nullable=True),
+    db.Column('tag_id', db.Integer(), db.ForeignKey('tags.tag_id'), nullable=True),
     db.Column('user_id', db.Integer(), db.ForeignKey('users.id'), nullable=True),
+    db.Column('inverse_tag', db.BOOLEAN, nullable=False, default=False)
 )
 
 
