@@ -34,6 +34,6 @@ def article_on_create_or_update(mapper, connection, tag_rule: TagRule):
     es_entity = TagRuleEs(
         meta={'id': tag_rule.rule_id},
         tag_id=tag_rule.tag_id,
-        query=QueryTranslator(tag_rule.rule_query).translate()
+        query=QueryTranslator(tag_rule.rule_query, tag_rule.rule_language).translate()
     )
     es_entity.save()

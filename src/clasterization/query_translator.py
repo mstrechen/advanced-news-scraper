@@ -1,8 +1,19 @@
 import json
+from functools import wraps
 from typing import Union, List
 
 import elasticsearch_dsl.query as Q
-from werkzeug.utils import cached_property
+
+
+def temporary_apply_language(func):
+    @wraps(func)
+    def wrapper(self: 'QueryTranslator', query: dict, **kwargs) -> Q.Query:
+        temp_lang = query.get('lang', self.lang)
+        self.lang, temp_lang = temp_lang, self.lang
+        res = func(self, query, **kwargs)
+        self.lang, temp_lang = temp_lang, self.lang
+        return res
+    return wrapper
 
 
 class QueryDecodeError(Exception):
@@ -13,9 +24,9 @@ class QueryTranslator:
     FIELDS = ['title', 'content']
     ALLOWED_TYPES = [str, list, dict]
 
-    def __init__(self, query: str):
+    def __init__(self, query: str, lang: str = None):
         self.query = self._decode_query(query)
-        self.lang = self._extract_lang()
+        self.lang = lang
 
     def translate(self) -> Q.Query:
         return self._translate(self.query)
@@ -33,6 +44,7 @@ class QueryTranslator:
         if type(query) is dict:
             return self._translate_dict_query(query)
 
+    @temporary_apply_language
     def _translate_dict_query(self, query: dict) -> Q.Query:
         if 'keywords' in query:
             keywords = query['keywords']
@@ -63,7 +75,7 @@ class QueryTranslator:
             must_not=[self._translate(subquery) for subquery in synonyms],
         )
 
-    @cached_property
+    @property
     def search_fields(self) -> List[str]:
         if not self.lang:
             return self.FIELDS
@@ -75,8 +87,3 @@ class QueryTranslator:
             return json.loads(query)
         except json.JSONDecodeError as e:
             raise QueryDecodeError(*e.args) from e
-
-    def _extract_lang(self):
-        if type(self.query) is not dict:
-            return None
-        return self.query.get('lang')

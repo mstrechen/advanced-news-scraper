@@ -7,6 +7,7 @@ import logging
 
 from admin.app import app, db, celery
 from admin.models.articles import ArticleText
+from clasterization.tasks import apply_tags_task
 from scraping import get_driver
 
 from bs4 import BeautifulSoup
@@ -47,6 +48,7 @@ def parse_article(link, article_rules, article_id, site_parser_id, dry_run):
     try:
         driver.get(link)
     except WebDriverException:
+        logger.exception("Failed to get page %s", link)
         return dict(result='FAILURE', comment="Failed to get page {}".format(link))
 
     text_xpath, title_xpath = parse_config(article_rules)
@@ -54,12 +56,14 @@ def parse_article(link, article_rules, article_id, site_parser_id, dry_run):
     try:
         element_text = driver.find_element_by_xpath(text_xpath)
     except WebDriverException:
+        logger.exception('Failed to get element text of article %s by xpath %s', link, text_xpath)
         return dict(result='FAILURE', comment="Failed to get element text of article {} by xpath {}"
                     .format(link, text_xpath))
 
     try:
         element_title = driver.find_element_by_xpath(title_xpath)
     except WebDriverException:
+        logger.exception('Failed to get element title of article %s by xpath %s', link, title_xpath)
         return dict(result='FAILURE', comment="Failed to get element title of article {} by xpath {}"
                     .format(link, title_xpath))
 
@@ -68,6 +72,7 @@ def parse_article(link, article_rules, article_id, site_parser_id, dry_run):
 
     if not dry_run:
         save_article_text(site_parser_id, article_id, title, text)
+        apply_tags_task.delay(article_id=article_id)
 
     return dict(result='SUCCESS', comment="Successfully parsed article {}".format(link),
                 article={"text": text, "title": title})
