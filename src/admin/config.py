@@ -57,7 +57,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'scraping.tasks.run_site_parsers.run_site_parsers': {
         'task': 'scraping.tasks.run_site_parsers.run_site_parsers_task',
-        'schedule': crontab(minute='*/3')
+        'schedule': crontab(minute='*/15')
     }
 }
 
