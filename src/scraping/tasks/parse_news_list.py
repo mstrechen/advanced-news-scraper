@@ -52,6 +52,7 @@ def article_exists(link, filter_has_text=False):
             query = query.filter(Article.last_text_id.isnot(None))
         return query.count() > 0
 
+
 def get_article_by_url(link):
     with app.app_context():
         return Article.query.filter_by(url=link).first().article_id
