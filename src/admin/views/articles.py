@@ -22,7 +22,7 @@ class ArticlesView(PatchedModelView):
     column_editable_list = []
     can_delete = False
     can_create = False
-    can_edit = False
+    can_edit = True
 
     column_list = ['site_id', 'language', 'url', 'text.title', 'text.content', 'tags']
     column_details_list = column_list
