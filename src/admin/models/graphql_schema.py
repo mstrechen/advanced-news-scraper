@@ -44,7 +44,6 @@ class Article(SQLAlchemyObjectType):
         interfaces = (relay.Node, )
 
 
-
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     all_articles = SQLAlchemyConnectionField(Article.connection)
