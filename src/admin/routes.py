@@ -2,6 +2,7 @@ import babel
 from flask_admin import AdminIndexView
 from flask_admin.babel import lazy_gettext
 from flask_admin.consts import ICON_TYPE_GLYPH
+from flask_graphql import GraphQLView
 from flask_login import current_user
 
 from admin.app import app, db
@@ -9,6 +10,7 @@ from flask import send_file
 
 import flask_admin as admin
 
+from admin.models.graphql_schema import schema
 from admin.utils import url_tools
 from admin.utils.setup import setup_menu
 from admin.views.articles import ArticlesView
@@ -55,3 +57,8 @@ MENU = [
 
 
 setup_menu(admin, db, MENU)
+app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
+    'graphql',
+    schema=schema,
+    graphiql=True,
+))
