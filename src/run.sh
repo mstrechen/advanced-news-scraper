@@ -5,10 +5,14 @@ set -x
 if [ "$MODE" == "WEB_PRODUCTION" ]; then
   KEYFILE=""
   CERTFILE=""
-  if [ -f "/certificates/privkey.pem" ]; then KEYFILE="--keyfile /certificates/privkey.pem"; fi
+  EXTRA_PORT=""
+  if [ -f "/certificates/privkey.pem" ]; then
+    KEYFILE="--keyfile /certificates/privkey.pem";
+    EXTRA_PORT="-b :443"
+  fi
   if [ -f "/certificates/fullchain.pem" ]; then CERTFILE="--certfile /certificates/fullchain.pem"; fi
   # shellcheck disable=SC2086
-  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b :80 -b :443 $CERTFILE $KEYFILE run:app
+  pipenv run gunicorn -w "${GUNICORN_WORKERS:-2}" -b :80 $EXTRA_PORT $CERTFILE $KEYFILE run:app
 elif [ "$MODE" == "WEB" ]; then
     pipenv run python run.py
 elif [ "$MODE" == "CELERY" ]; then
